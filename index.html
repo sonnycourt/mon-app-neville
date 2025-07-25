@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal de Bord - 30 Jours</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* Styles pour la page de connexion */
+        .auth-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            display: none;
+        }
+
+        .auth-logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .auth-title {
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .auth-subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .auth-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .auth-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .auth-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .auth-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .auth-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .auth-message.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            display: block;
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .container.active {
+            display: block;
+        }
+
+        .auth-container.active {
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: underline;
+        }
+
+        .progress-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 15px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .day.selected {
+            background: #e9ecef;
+            box-shadow: inset 0 0 0 2px #adb5bd;
+        }
+
+        .day.completed {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .day-number {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .day-check {
+            font-size: 1em;
+            margin-top: 2px;
+            opacity: 0.8;
+        }
+
+        .day-label {
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        .journal-entry {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .journal-entry.active {
+            display: block;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .entry-title {
+            font-size: 1.8em;
+            color: #667eea;
+        }
+
+        .entry-date {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .entry-section {
+            margin-bottom: 25px;
+        }
+
+        .entry-section h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .incarnation-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .scale-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .scale-number:hover {
+            transform: scale(1.1);
+            background: #e0e0e0;
+        }
+
+        .scale-number.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: scale(1.2);
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto 0;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .quote-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+
+        .quote {
+            font-size: 1.3em;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        #incarnationChart {
+            max-height: 300px;
+        }
+
+        .export-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .export-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Styles pour la célébration */
+        .celebration-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .celebration-content {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            animation: celebrationPop 0.5s ease;
+        }
+
+        @keyframes celebrationPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .celebration-title {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            animation: confettiFall 3s linear;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .promo-code {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            display: inline-block;
+        }
+
+        .certificate-btn, .new-cycle-btn {
+            margin: 10px;
+            padding: 12px 25px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .certificate-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .new-cycle-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .new-cycle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .calendar {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .incarnation-scale {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .user-info {
+                position: static;
+                margin-bottom: 20px;
+                justify-content: center;
+            }
+        }
+    </style>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <!-- Chart.js pour le graphique -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Page de connexion -->
+    <div class="auth-container active" id="authContainer">
+        <div class="auth-logo">📖</div>
+        <h2 class="auth-title">Journal de Bord</h2>
+        <p class="auth-subtitle">30 jours pour manifester vos désirs</p>
+        
+        <form id="authForm">
+            <input type="email" 
+                   class="auth-input" 
+                   id="emailInput" 
+                   placeholder="Votre adresse email" 
+                   required>
+            
+            <button type="submit" class="auth-button" id="authButton">
+                Recevoir mon lien magique
+            </button>
+        </form>
+        
+        <div class="auth-message" id="authMessage"></div>
+        
+        <p style="margin-top: 30px; color: #999; font-size: 0.9em;">
+            📧 Vérifiez vos spams si l'email n'arrive pas<br>
+            🔒 Connexion sécurisée et privée
+        </p>
+    </div>
+
+    <!-- Container principal de l'application -->
+    <div class="container" id="mainContainer">
+        <div class="user-info">
+            <span id="userEmail"></span>
+            <button class="logout-btn" onclick="logout()">Déconnexion</button>
+        </div>
+
+        <div class="header">
+            <h1>Journal de Bord</h1>
+            <p class="subtitle">30 jours pour reprogrammer votre subconscient</p>
+        </div>
+
+        <div class="quote-section">
+            <p class="quote" id="dailyQuote">
+                "L'imagination est tout. C'est l'aperçu des attractions à venir de la vie."
+            </p>
+        </div>
+
+        <div class="progress-section">
+            <h2>Votre Progression</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-number" id="daysCompleted">0</div>
+                    <div>Jours complétés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number" id="avgIncarnation">-</div>
+                    <div>Moyenne incarnation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-number" id="bestStreak">0</div>
+                    <div>Meilleur streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-number" id="progressRate">0%</div>
+                    <div>Taux de progression</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; margin-bottom: 20px;">Votre Calendrier de Transformation</h2>
+        <div class="calendar" id="calendar"></div>
+
+        <div id="journalEntries"></div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">Évolution de votre incarnation de l'état souhaité</h3>
+            <canvas id="incarnationChart"></canvas>
+        </div>
+
+        <button class="export-btn" onclick="exportJournal()">📥 Exporter mon journal</button>
+
+        <!-- Modal de célébration -->
+        <div class="celebration-modal" id="celebrationModal">
+            <div class="celebration-content">
+                <h2 class="celebration-title">🎉 Félicitations !</h2>
+                <p style="font-size: 1.2em; color: #666; margin-bottom: 20px;">
+                    Vous avez complété les 30 jours de transformation !
+                </p>
+                <p style="font-size: 1.1em; margin-bottom: 30px;">
+                    Votre dévouement et votre persévérance ont porté leurs fruits.
+                </p>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+                    <p style="color: #666; margin-bottom: 10px;">Votre récompense exclusive :</p>
+                    <div class="promo-code">TRANSFORM30</div>
+                <p style="color: #666; margin-top: 10px;">
+    30% de réduction sur <a href="https://sonnycourt.com/formations" target="_blank" style="color: #667eea; text-decoration: underline;">toutes les formations</a><br>
+    <small>Valable 7 jours</small>
+</p>
+                
+                <button class="certificate-btn" onclick="generateCertificate()">
+                    📜 Télécharger mon certificat
+                </button>
+                
+                <button class="new-cycle-btn" onclick="startNewCycle()">
+                    🔄 Commencer un nouveau cycle
+                </button>
+                
+                <button onclick="closeCelebration()" style="display: block; margin: 20px auto 0; background: none; border: none; color: #666; cursor: pointer; text-decoration: underline;">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Configuration Firebase (VOS CLÉS)
+    const firebaseConfig = {
+        apiKey: "AIzaSyCqWNzrUH6KgNGQ_kXzRyhSHnMMD1BFRG4",
+        authDomain: "journal-transformation-neville.firebaseapp.com",
+        databaseURL: "https://journal-transformation-neville-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "journal-transformation-neville",
+        storageBucket: "journal-transformation-neville.firebasestorage.app",
+        messagingSenderId: "226515664700",
+        appId: "1:226515664700:web:1417775fa1e9ac4f5da839",
+        measurementId: "G-1K9YMQF8YV"
+    };
+    
+    // Initialiser Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const auth = firebase.auth();
+    
+    // Configurer la persistance de session
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    
+// Configuration pour le magic link
+const actionCodeSettings = {
+    url: 'https://journal-de-bord-30-jours.netlify.app',
+    handleCodeInApp: true
+};
+    // Citations de Neville Goddard (30 jours)
+    const quotes = [
+        "L'imagination est tout. C'est l'aperçu des attractions à venir de la vie.",
+        "Changez votre conception de vous-même et vous changerez automatiquement le monde dans lequel vous vivez.",
+        "Assumez le sentiment du désir accompli et observez la route que votre attention suit.",
+        "Votre imagination est capable de faire tout ce que vous lui demandez de faire.",
+        "Le monde est vous-même poussé vers l'extérieur.",
+        "Sentez-vous comme vous le souhaiteriez et votre souhait doit être réalisé.",
+        "La conscience est la seule et unique réalité.",
+        "Tout ce que vous êtes conscient d'être, vous l'exprimez.",
+        "L'homme ne peut recevoir que ce qu'il voit en lui-même.",
+        "Votre foi est votre fortune.",
+        "Cessez d'essayer de changer le monde, il n'est que le miroir.",
+        "Un changement d'impression entraîne un changement d'expression.",
+        "Les signes suivent, ils ne précèdent pas.",
+        "Vivez dans la fin et vous n'échouerez jamais.",
+        "L'imagination créatrice est la clé de votre futur.",
+        "N'acceptez comme vrai que ce qui est conforme à votre idéal.",
+        "Tout ce que vous pouvez concevoir et croire, vous pouvez l'accomplir.",
+        "Le sentiment est le secret de la création.",
+        "Osez assumer que vous êtes ce que vous voulez être.",
+        "Votre monde est votre conscience objectivée.",
+        "La persévérance dans l'assomption est la clé.",
+        "L'état désiré doit devenir votre état naturel.",
+        "Ce que vous cherchez, vous le cherchez depuis l'intérieur.",
+        "Abandonnez-vous à votre imagination.",
+        "La prière est l'art de croire que vous avez déjà reçu.",
+        "Tout est possible à celui qui croit.",
+        "Votre imagination est Dieu en vous.",
+        "Ne combattez pas le monde, transformez votre conscience.",
+        "Ce que vous êtes conscient d'être, vous le devenez.",
+        "La gratitude est la signature de la foi accomplie."
+    ];
+    
+    let currentUser = null;
+function getCurrentProgramDay() {
+    const startDate = new Date(localStorage.getItem('journalStartDate') || new Date());
+    const today = new Date();
+    
+    // Réinitialiser à minuit pour les deux dates
+    startDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    
+    const dayNumber = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    return Math.min(dayNumber, 30); // Max 30 jours
+}
+    let journalData = {
+        entries: {},
+        stats: {
+            daysCompleted: 0,
+            bestStreak: 0,
+            currentStreak: 0
+        }
+    };
+    let incarnationChart = null;
+
+    // PROTECTION ANTI-SPAM : Vérifier si l'email peut envoyer
+    function canSendEmail(email) {
+        // Bloquer les domaines temporaires
+        const tempDomains = ['tempmail', 'guerrillamail', '10minutemail', 'throwaway', 'mailinator'];
+        const domain = email.split('@')[1].toLowerCase();
+        
+        for (let temp of tempDomains) {
+            if (domain.includes(temp)) {
+                showAuthMessage('Les emails temporaires ne sont pas acceptés', 'error');
+                return false;
+            }
+        }
+        
+        // Vérifier le rate limit
+        const attempts = JSON.parse(localStorage.getItem('emailAttempts') || '{}');
+        const now = Date.now();
+        
+        // Nettoyer les vieilles tentatives (+ d'1h)
+        Object.keys(attempts).forEach(key => {
+            if (now - attempts[key].lastAttempt > 3600000) {
+                delete attempts[key];
+            }
+        });
+        
+        // Vérifier les tentatives pour cet email
+        const emailKey = email.toLowerCase();
+        if (attempts[emailKey]) {
+            const timePassed = now - attempts[emailKey].lastAttempt;
+            
+            if (attempts[emailKey].count >= 3 && timePassed < 3600000) {
+                const timeLeft = Math.ceil((3600000 - timePassed) / 60000);
+                showAuthMessage(
+                    `Trop de tentatives. Réessayez dans ${timeLeft} minutes.`,
+                    'warning'
+                );
+                return false;
+            }
+            
+            // Reset si plus d'1h
+            if (timePassed >= 3600000) {
+                attempts[emailKey] = { count: 0, lastAttempt: now };
+            }
+        }
+        
+        // Incrémenter le compteur
+        if (!attempts[emailKey]) {
+            attempts[emailKey] = { count: 0, lastAttempt: now };
+        }
+        attempts[emailKey].count++;
+        attempts[emailKey].lastAttempt = now;
+        
+        localStorage.setItem('emailAttempts', JSON.stringify(attempts));
+        return true;
+    }
+
+    // Vérifier si on revient du magic link
+    if (auth.isSignInWithEmailLink(window.location.href)) {
+        let email = window.localStorage.getItem('emailForSignIn');
+        if (!email) {
+            email = window.prompt('Veuillez confirmer votre email pour la connexion');
+        }
+        
+        auth.signInWithEmailLink(email, window.location.href)
+            .then((result) => {
+                window.localStorage.removeItem('emailForSignIn');
+                window.history.replaceState({}, document.title, window.location.pathname);
+            })
+            .catch((error) => {
+                console.error('Erreur de connexion:', error);
+                showAuthMessage('Erreur lors de la connexion. Veuillez réessayer.', 'error');
+            });
+    }
+
+    // Observer l'état de connexion
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            currentUser = user;
+            showApp();
+            loadUserData();
+        } else {
+            showAuth();
+        }
+    });
+
+    // Gestion du formulaire de connexion avec PROTECTION
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('emailInput').value.trim().toLowerCase();
+        const button = document.getElementById('authButton');
+        
+        // Vérifier si l'email peut envoyer (protection anti-spam)
+        if (!canSendEmail(email)) {
+            return;
+        }
+        
+        button.disabled = true;
+        button.textContent = 'Envoi en cours...';
+        
+        try {
+            await auth.sendSignInLinkToEmail(email, actionCodeSettings);
+            window.localStorage.setItem('emailForSignIn', email);
+            showAuthMessage(
+                `📧 Lien envoyé à ${email} ! Vérifiez vos emails (et les spams).`, 
+                'success'
+            );
+            document.getElementById('emailInput').value = '';
+            
+            // Message d'aide après 2 minutes
+            setTimeout(() => {
+                const messageEl = document.getElementById('authMessage');
+                if (messageEl.classList.contains('success') && messageEl.style.display === 'block') {
+                    showAuthMessage(
+                        `💡 Email non reçu ? Vérifiez vos spams ou réessayez dans 1 heure.`,
+                        'warning'
+                    );
+                }
+            }, 120000); // 2 minutes
+            
+        } catch (error) {
+            console.error('Erreur:', error);
+            
+            // Messages d'erreur personnalisés
+            if (error.code === 'auth/invalid-email') {
+                showAuthMessage('Email invalide. Vérifiez l\'adresse.', 'error');
+            } else if (error.code === 'auth/too-many-requests') {
+                showAuthMessage(
+                    'Service temporairement indisponible. Réessayez dans 1 heure.',
+                    'error'
+                );
+            } else {
+                showAuthMessage('Erreur lors de l\'envoi. Veuillez réessayer.', 'error');
+            }
+        } finally {
+            button.disabled = false;
+            button.textContent = 'Recevoir mon lien magique';
+        }
+    });
+
+    function showAuthMessage(message, type) {
+        const messageEl = document.getElementById('authMessage');
+        messageEl.textContent = message;
+        messageEl.className = `auth-message ${type}`;
+        messageEl.style.display = 'block';
+        
+        // Auto-hide après 10 secondes sauf pour les warnings
+        if (type !== 'warning') {
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 10000);
+        }
+    }
+
+    function showAuth() {
+        document.getElementById('authContainer').classList.add('active');
+        document.getElementById('mainContainer').classList.remove('active');
+    }
+
+    function showApp() {
+        document.getElementById('authContainer').classList.remove('active');
+        document.getElementById('mainContainer').classList.add('active');
+        document.getElementById('userEmail').textContent = currentUser.email;
+        initializeApp();
+    }
+
+    function logout() {
+        auth.signOut();
+    }
+
+    // Fonctions pour sauvegarder/charger depuis Firebase
+    function saveToFirebase(data) {
+        if (!currentUser) return;
+        
+        const userId = currentUser.uid;
+        database.ref('users/' + userId + '/journal').set(data)
+            .then(() => {
+                console.log('✅ Données sauvegardées!');
+            })
+            .catch((error) => {
+                console.error('❌ Erreur:', error);
+            });
+    }
+
+    function loadUserData() {
+        if (!currentUser) return;
+        
+        const userId = currentUser.uid;
+        database.ref('users/' + userId + '/journal').once('value')
+            .then((snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    journalData = data;
+                    updateUIWithData();
+                }
+            })
+            .catch((error) => {
+                console.error('❌ Erreur de chargement:', error);
+            });
+    }
+
+    // Initialisation de l'application
+    function initializeApp() {
+        initializeCalendar();
+        updateStats();
+        updateDailyQuote();
+        showTodayEntry();
+        initializeChart();
+    }
+
+    function updateUIWithData() {
+        initializeCalendar();
+        updateStats();
+        updateChart();
+    }
+
+    function initializeCalendar() {
+        const calendar = document.getElementById('calendar');
+        calendar.innerHTML = '';
+        
+        for (let i = 1; i <= 30; i++) {
+            const day = document.createElement('div');
+            day.className = 'day';
+            day.id = `day-${i}`;
+// Style pour les jours bloqués
+    const maxDay = getCurrentProgramDay();
+    if (i > maxDay) {
+        day.style.opacity = '0.5';
+        day.style.cursor = 'not-allowed';
+    }
+            
+            if (journalData.entries[i] && journalData.entries[i].completed) {
+                day.classList.add('completed');
+            }
+            
+            const dayNumber = document.createElement('div');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = i;
+            
+            day.appendChild(dayNumber);
+            
+            if (journalData.entries[i] && journalData.entries[i].completed) {
+                const check = document.createElement('div');
+                check.className = 'day-check';
+                check.textContent = '✓';
+                day.appendChild(check);
+            } else {
+                const label = document.createElement('div');
+                label.className = 'day-label';
+                label.textContent = 'Jour';
+                day.appendChild(label);
+            }
+            
+            day.onclick = () => {
+                document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+                day.classList.add('selected');
+                showEntry(i);
+            };
+            
+            calendar.appendChild(day);
+        }
+    }
+
+   function showEntry(dayNumber) {
+    // NOUVEAU : Vérifier si le jour est accessible
+    const maxDay = getCurrentProgramDay();
+    if (dayNumber > maxDay) {
+        alert(`Ce jour sera disponible dans ${dayNumber - maxDay} jour(s)`);
+        return; // Stop ici, ne pas afficher le formulaire
+    }
+    
+    const entriesContainer = document.getElementById('journalEntries');
+    entriesContainer.innerHTML = '';
+        
+        const entry = journalData.entries[dayNumber] || {
+            intention: '',
+            gratitude: '',
+            reflection: '',
+            incarnation: 0,
+            completed: false
+        };
+        
+        const entryDiv = document.createElement('div');
+        entryDiv.className = 'journal-entry active';
+        entryDiv.innerHTML = `
+            <div class="entry-header">
+                <h2 class="entry-title">Jour ${dayNumber}</h2>
+                <span class="entry-date">${new Date().toLocaleDateString('fr-FR')}</span>
+            </div>
+            
+            <div class="entry-section">
+                <h3>💫 Mon intention du jour</h3>
+                <textarea id="intention-${dayNumber}" placeholder="Quelle est votre intention pour aujourd'hui après avoir écouté l'audio ?">${entry.intention}</textarea>
+            </div>
+            
+            <div class="entry-section">
+                <h3>🙏 Ma gratitude</h3>
+                <textarea id="gratitude-${dayNumber}" placeholder="Pour quoi êtes-vous reconnaissant aujourd'hui ?">${entry.gratitude}</textarea>
+            </div>
+            
+            <div class="entry-section">
+                <h3>✨ Ma réflexion</h3>
+                <textarea id="reflection-${dayNumber}" placeholder="Qu'avez-vous ressenti pendant l'audio ? Quelles prises de conscience avez-vous eues ?">${entry.reflection}</textarea>
+            </div>
+            
+            <div class="entry-section">
+                <h3>🎯 Incarnation de l'état souhaité</h3>
+                <div class="incarnation-scale">
+                    ${[1,2,3,4,5,6,7,8,9,10].map(num => 
+                        `<div class="scale-number ${entry.incarnation === num ? 'selected' : ''}" 
+                              onclick="selectIncarnation(${dayNumber}, ${num})">${num}</div>`
+                    ).join('')}
+                </div>
+            </div>
+            
+            <button class="save-btn" onclick="saveEntry(${dayNumber})">
+                ${entry.completed ? '✓ Mettre à jour' : '💾 Sauvegarder'}
+            </button>
+        `;
+        
+        entriesContainer.appendChild(entryDiv);
+        
+        // Mettre à jour la citation du jour
+        updateDailyQuote(dayNumber);
+    }
+
+    function selectIncarnation(dayNumber, level) {
+        const scales = document.querySelectorAll('.scale-number');
+        scales.forEach(s => s.classList.remove('selected'));
+        event.target.classList.add('selected');
+        
+        if (!journalData.entries[dayNumber]) {
+            journalData.entries[dayNumber] = {};
+        }
+        journalData.entries[dayNumber].incarnation = level;
+    }
+
+    function saveEntry(dayNumber) {
+        const intention = document.getElementById(`intention-${dayNumber}`).value;
+        const gratitude = document.getElementById(`gratitude-${dayNumber}`).value;
+        const reflection = document.getElementById(`reflection-${dayNumber}`).value;
+        
+        if (!journalData.entries[dayNumber]) {
+            journalData.entries[dayNumber] = {};
+        }
+        
+        const wasCompleted = journalData.entries[dayNumber].completed;
+        
+        journalData.entries[dayNumber] = {
+            ...journalData.entries[dayNumber],
+            intention,
+            gratitude,
+            reflection,
+            completed: true,
+            date: new Date().toISOString()
+        };
+        
+        if (!wasCompleted) {
+            journalData.stats.daysCompleted++;
+            updateStreak();
+        }
+        
+        saveToFirebase(journalData);
+
+// Définir la date de début lors du premier enregistrement
+if (dayNumber === 1 && !localStorage.getItem('journalStartDate')) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Minuit pour cohérence
+    localStorage.setItem('journalStartDate', today.toISOString());
+}
+        
+        document.getElementById(`day-${dayNumber}`).classList.add('completed');
+        updateStats();
+        checkCompletion();
+        updateChart();
+        initializeCalendar();
+        
+        // Animation de succès
+        const btn = event.target;
+        btn.textContent = '✨ Sauvegardé !';
+        setTimeout(() => {
+            btn.textContent = '✓ Mettre à jour';
+        }, 2000);
+    }
+
+    function updateStats() {
+        const progressPercentage = (journalData.stats.daysCompleted / 30) * 100;
+        document.getElementById('progressFill').style.width = progressPercentage + '%';
+        document.getElementById('progressFill').textContent = Math.round(progressPercentage) + '%';
+        
+        document.getElementById('daysCompleted').textContent = journalData.stats.daysCompleted;
+        document.getElementById('bestStreak').textContent = journalData.stats.bestStreak || 0;
+        document.getElementById('progressRate').textContent = Math.round(progressPercentage) + '%';
+        
+        // Calculer la moyenne d'incarnation
+        const incarnations = Object.values(journalData.entries)
+            .filter(e => e.incarnation && e.incarnation > 0)
+            .map(e => e.incarnation);
+        
+        if (incarnations.length > 0) {
+            const avg = incarnations.reduce((a, b) => a + b, 0) / incarnations.length;
+            document.getElementById('avgIncarnation').textContent = avg.toFixed(1);
+        } else {
+            document.getElementById('avgIncarnation').textContent = '-';
+        }
+        
+        // Vérifier si on vient de compléter les 30 jours
+        if (journalData.entries[30] && journalData.entries[30].completed) {
+            checkCompletion();
+        }
+    }
+
+    function updateStreak() {
+        const today = new Date();
+        const entries = Object.entries(journalData.entries)
+            .filter(([_, entry]) => entry.completed)
+            .sort((a, b) => new Date(b[1].date) - new Date(a[1].date));
+        
+        if (entries.length === 0) {
+            journalData.stats.currentStreak = 0;
+            return;
+        }
+        
+        let streak = 1;
+        for (let i = 1; i < entries.length; i++) {
+            const currentDate = new Date(entries[i][1].date);
+            const prevDate = new Date(entries[i-1][1].date);
+            const dayDiff = Math.floor((prevDate - currentDate) / (1000 * 60 * 60 * 24));
+            
+            if (dayDiff === 1) {
+                streak++;
+            } else {
+                break;
+            }
+        }
+        
+        journalData.stats.currentStreak = streak;
+        if (streak > (journalData.stats.bestStreak || 0)) {
+            journalData.stats.bestStreak = streak;
+        }
+    }
+
+    function updateDailyQuote(dayNumber = null) {
+        const day = dayNumber || new Date().getDate() % 30;
+        const quote = quotes[day - 1] || quotes[0];
+        document.getElementById('dailyQuote').textContent = quote;
+    }
+
+    function showTodayEntry() {
+        const today = new Date();
+        const startDate = new Date(localStorage.getItem('journalStartDate') || today);
+        const dayNumber = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        
+        if (dayNumber >= 1 && dayNumber <= 30) {
+            showEntry(dayNumber);
+            document.getElementById(`day-${dayNumber}`)?.classList.add('selected');
+        } else {
+            showEntry(1);
+            document.getElementById('day-1')?.classList.add('selected');
+        }
+        
+    
+    }
+
+    function initializeChart() {
+        const ctx = document.getElementById('incarnationChart').getContext('2d');
+        incarnationChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 30}, (_, i) => `Jour ${i + 1}`),
+                datasets: [{
+                    label: 'Niveau d\'incarnation',
+                    data: Array(30).fill(null),
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function updateChart() {
+        if (!incarnationChart) return;
+        
+        const data = Array(30).fill(null);
+        for (let i = 1; i <= 30; i++) {
+            if (journalData.entries[i] && journalData.entries[i].incarnation) {
+                data[i - 1] = journalData.entries[i].incarnation;
+            }
+        }
+        
+        incarnationChart.data.datasets[0].data = data;
+        incarnationChart.update();
+    }
+
+    // Vérifier si les 30 jours sont complétés
+   function checkCompletion() {
+    if (journalData.entries[30] && journalData.entries[30].completed) {
+        // Vérifier si c'est la première fois
+        const celebrated = localStorage.getItem('celebrated_' + currentUser.uid);
+        if (!celebrated) {
+            setTimeout(() => {
+                showCelebration();
+                localStorage.setItem('celebrated_' + currentUser.uid, 'true');
+            }, 1000);
+        }
+    }
+}
+    // Afficher la célébration
+    function showCelebration() {
+        const modal = document.getElementById('celebrationModal');
+        modal.style.display = 'flex';
+        
+        // Créer des confettis
+        for (let i = 0; i < 50; i++) {
+            createConfetti();
+        }
+        
+        // Son de célébration (optionnel)
+        const audio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
+        audio.play().catch(() => {});
+    }
+
+    // Créer un confetti
+    function createConfetti() {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.background = ['#667eea', '#764ba2', '#FFD700', '#FF69B4', '#00CED1'][Math.floor(Math.random() * 5)];
+        confetti.style.animationDelay = Math.random() * 3 + 's';
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 3000);
+    }
+
+    // Fermer la modal
+    function closeCelebration() {
+        document.getElementById('celebrationModal').style.display = 'none';
+    }
+
+    // Générer le certificat
+    function generateCertificate() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 800;
+        canvas.height = 600;
+        const ctx = canvas.getContext('2d');
+        
+        // Fond blanc
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, 800, 600);
+        
+        // Bordure
+        ctx.strokeStyle = '#667eea';
+        ctx.lineWidth = 5;
+        ctx.strokeRect(20, 20, 760, 560);
+        
+        // Titre
+        ctx.fillStyle = '#667eea';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Certificat de Transformation', 400, 100);
+        
+        // Sous-titre
+        ctx.font = '24px Arial';
+        ctx.fillText('30 Jours de Reprogrammation du Subconscient', 400, 150);
+        
+        // Nom
+        ctx.fillStyle = '#333';
+        ctx.font = 'italic 32px Arial';
+        ctx.fillText('Décerné à', 400, 250);
+        
+        ctx.font = 'bold 36px Arial';
+        ctx.fillStyle = '#764ba2';
+        ctx.fillText(currentUser.email, 400, 300);
+        
+        // Date
+        ctx.fillStyle = '#666';
+        ctx.font = '20px Arial';
+        const date = new Date().toLocaleDateString('fr-FR', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        ctx.fillText('Le ' + date, 400, 380);
+        
+        // Message
+        ctx.font = '18px Arial';
+        ctx.fillText('Pour avoir complété avec succès le programme', 400, 450);
+        ctx.fillText('de transformation personnelle de 30 jours', 400, 480);
+        
+        // Signature
+        ctx.font = 'italic 24px Arial';
+        ctx.fillStyle = '#667eea';
+        ctx.fillText('Sonny Court', 400, 540);
+        
+        // Télécharger
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `certificat-transformation-${new Date().toISOString().slice(0,10)}.png`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    }
+
+    // Commencer un nouveau cycle
+    function startNewCycle() {
+        if (confirm('Voulez-vous vraiment commencer un nouveau cycle de 30 jours ? Votre progression actuelle sera archivée.')) {
+            // Archiver les données actuelles
+            const archive = {
+                completedAt: new Date().toISOString(),
+                data: { ...journalData }
+            };
+            
+            // Sauvegarder l'archive
+            database.ref('users/' + currentUser.uid + '/archives/' + Date.now()).set(archive);
+            
+            // Réinitialiser les données
+            journalData = {
+                entries: {},
+                stats: {
+                    daysCompleted: 0,
+                    bestStreak: 0,
+                    currentStreak: 0
+                }
+            };
+            
+            // Sauvegarder et recharger
+            saveToFirebase(journalData);
+            localStorage.removeItem('celebrated_' + currentUser.uid);
+            closeCelebration();
+            updateUIWithData();
+            showEntry(1);
+        }
+    }
+
+    function exportJournal() {
+        let exportText = `JOURNAL DE BORD - 30 JOURS DE TRANSFORMATION\n`;
+        exportText += `Exporté le : ${new Date().toLocaleDateString('fr-FR')}\n`;
+        exportText += `Email : ${currentUser?.email || 'Non connecté'}\n\n`;
+        
+        exportText += `=== STATISTIQUES ===\n`;
+        exportText += `Jours complétés : ${journalData.stats.daysCompleted}/30\n`;
+        exportText += `Meilleur streak : ${journalData.stats.bestStreak || 0} jours\n`;
+        exportText += `Progression : ${Math.round((journalData.stats.daysCompleted / 30) * 100)}%\n\n`;
+        
+        exportText += `=== ENTRÉES DU JOURNAL ===\n\n`;
+        
+        for (let i = 1; i <= 30; i++) {
+            const entry = journalData.entries[i];
+            if (entry && entry.completed) {
+                exportText += `--- JOUR ${i} ---\n`;
+                exportText += `Date : ${new Date(entry.date).toLocaleDateString('fr-FR')}\n`;
+                exportText += `Citation du jour : "${quotes[i - 1]}"\n\n`;
+                
+                if (entry.intention) {
+                    exportText += `INTENTION :\n${entry.intention}\n\n`;
+                }
+                
+                if (entry.gratitude) {
+                    exportText += `GRATITUDE :\n${entry.gratitude}\n\n`;
+                }
+                
+                if (entry.reflection) {
+                    exportText += `RÉFLEXION :\n${entry.reflection}\n\n`;
+                }
+                
+                if (entry.incarnation) {
+                    exportText += `NIVEAU D'INCARNATION : ${entry.incarnation}/10\n`;
+                }
+                
+                exportText += `\n${'='.repeat(50)}\n\n`;
+            }
+        }
+        
+        // Créer et télécharger le fichier
+        const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `journal-bord-${new Date().toISOString().slice(0,10)}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    </script>
+</body>
+</html>
