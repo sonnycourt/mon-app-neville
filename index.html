@@ -1449,7 +1449,7 @@ if (dayNumber === 1 && !localStorage.getItem('journalStartDate')) {
         checkCompletion();
         updateChart();
         // Afficher le popup de review après le jour 3
-        if (dayNumber === 3 && !reviewSubmitted) {
+        if (dayNumber === 1 && !reviewSubmitted) {
             setTimeout(() => {
                 showReviewPopup();
             }, 2000);
