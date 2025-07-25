@@ -3,7 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Journal de Bord - 30 Jours</title>
+    <title>Journal de Bord - 30 Jours------- SEARCH
+    function showAuthMessage(message, type) {
+        const messageEl = document.getElementById('authMessage');
+        messageEl.textContent = message;
+        messageEl.className = `auth-message ${type}`;
+        messageEl.style.display = 'block';
+        
+        // Auto-hide après 10 secondes sauf pour les warnings
+        if (type !== 'warning') {
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 10000);
+        }
+    }
+=======
+    function showAuthMessage(message, type) {
+        const messageEl = document.getElementById('authMessage');
+        messageEl.textContent = message;
+        messageEl.className = `auth-message ${type}`;
+        messageEl.style.display = 'block';
+        
+        // Le message reste affiché en permanence - plus de disparition automatique
+    }
++++++++ REPLACE------- SEARCH
+    function showAuthMessage(message, type) {
+        const messageEl = document.getElementById('authMessage');
+        messageEl.textContent = message;
+        messageEl.className = `auth-message ${type}`;
+        messageEl.style.display = 'block';
+        
+        // Auto-hide après 10 secondes sauf pour les warnings
+        if (type !== 'warning') {
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 10000);
+        }
+    }
+
++++++++ REPLACE</title>
     <style>
         * {
             margin: 0;
