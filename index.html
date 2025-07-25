@@ -953,8 +953,8 @@
     <div class="review-content">
         <div id="reviewForm">
             <div class="review-header">
-                <h2 class="review-title">Votre avis compte ! ✨</h2>
-                <p class="review-subtitle">Comment évaluez-vous votre expérience jusque là ?</p>
+                <h2 class="review-title">Ton avis compte ! ✨</h2>
+                <p class="review-subtitle">Comment évalues-tu ton expérience jusque là ?</p>
             </div>
             
             <div class="stars-container" id="starsContainer">
@@ -968,7 +968,7 @@
             <textarea 
                 class="review-textarea" 
                 id="reviewComment"
-                placeholder="Partagez votre avis sur votre début de transformation... (optionnel)"
+                placeholder="Partage déjà ton avis sur le système Souhaits Réalisés et le début de ta transformation..."
             ></textarea>
             
             <div class="review-buttons">
@@ -985,7 +985,7 @@
             <div class="review-success-icon">🎉</div>
             <h3 class="review-title">Merci !</h3>
             <p class="review-success-message">
-                Votre retour nous aide à améliorer l'expérience pour tous.
+                Ton retour nous aide à améliorer l'expérience pour tous.
             </p>
             <button class="review-btn review-btn-primary" onclick="closeReview()">
                 Continuer
@@ -1449,11 +1449,11 @@ if (dayNumber === 1 && !localStorage.getItem('journalStartDate')) {
         checkCompletion();
         updateChart();
         // Afficher le popup de review après le jour 3
-        if (dayNumber === 1 && !reviewSubmitted) {
-            setTimeout(() => {
-                showReviewPopup();
-            }, 2000);
-        }
+       if ([1, 4, 7, 10].includes(dayNumber) && !localStorage.getItem(`review_day3_${currentUser.uid}`)) {
+    setTimeout(() => {
+        showReviewPopup();
+    }, 2000);
+}
         initializeCalendar();
         
         // Animation de succès
