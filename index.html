@@ -577,7 +577,10 @@
             0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
-
+@keyframes confettiFall6 {
+    0%   { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
         .promo-code {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -1626,16 +1629,22 @@ if (dayNumber === 1 && !localStorage.getItem('journalStartDate')) {
     }
 
     // Créer un confetti
-    function createConfetti() {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.background = ['#667eea', '#764ba2', '#FFD700', '#FF69B4', '#00CED1'][Math.floor(Math.random() * 5)];
-        confetti.style.animationDelay = Math.random() * 3 + 's';
-        document.body.appendChild(confetti);
-        
-        setTimeout(() => confetti.remove(), 3000);
-    }
+    for (let i = 0; i < 60; i++) {
+  const c = document.createElement('div');
+  c.className = 'confetti';
+  c.style.position = 'fixed';
+  c.style.top = '-10vh';
+  c.style.left = Math.random() * 100 + 'vw';
+  c.style.width = (8 + Math.random() * 12) + 'px';
+  c.style.height = c.style.width;
+  c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+  c.style.background = ['#667eea', '#764ba2', '#FFD700', '#FF69B4', '#00CED1', '#fff'][Math.floor(Math.random() * 6)];
+  c.style.zIndex = 9999;
+  c.style.animation = 'confettiFall6 6s linear forwards';
+  c.style.animationDelay = Math.random() * 1.5 + 's';
+  document.body.appendChild(c);
+  setTimeout(() => c.remove(), 6000);
+}
 
     // Fermer la modal
     function closeCelebration() {
