@@ -1628,8 +1628,8 @@ if (dayNumber === 1 && !localStorage.getItem('journalStartDate')) {
         audio.play().catch(() => {});
     }
 
-    // Créer un confetti
-    for (let i = 0; i < 60; i++) {
+  // Créer un confetti (seulement quand on l’appelle)
+function createConfetti() {
   const c = document.createElement('div');
   c.className = 'confetti';
   c.style.position = 'fixed';
