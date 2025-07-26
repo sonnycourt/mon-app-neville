@@ -889,11 +889,11 @@
                     <div class="stat-number" id="avgIncarnation">-</div>
                     <div>Moyenne incarnation</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🏆</div>
-                    <div class="stat-number" id="bestStreak">0</div>
-                    <div>Meilleur streak</div>
-                </div>
+               <div class="stat-card">
+    <div class="stat-icon">🔥</div>
+    <div class="stat-number" id="currentStreak">0</div>
+    <div>Streak actuel</div>
+</div>
                 <div class="stat-card">
                     <div class="stat-icon">📈</div>
                     <div class="stat-number" id="progressRate">0%</div>
@@ -1470,7 +1470,7 @@ if (dayNumber === 1 && !localStorage.getItem('journalStartDate')) {
         document.getElementById('progressFill').textContent = Math.round(progressPercentage) + '%';
         
         document.getElementById('daysCompleted').textContent = journalData.stats.daysCompleted;
-        document.getElementById('bestStreak').textContent = journalData.stats.bestStreak || 0;
+        document.getElementById('currentStreak').textContent = journalData.stats.currentStreak || 0;
         document.getElementById('progressRate').textContent = Math.round(progressPercentage) + '%';
         
         // Calculer la moyenne d'incarnation
