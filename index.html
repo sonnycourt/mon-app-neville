@@ -1390,7 +1390,7 @@
             <input type="email" 
                    class="auth-input" 
                    id="emailInput" 
-                   placeholder="Votre adresse email" 
+                   placeholder="Ton adresse email" 
                    required>
             
             <button type="submit" class="auth-button" id="authButton">
@@ -1415,7 +1415,7 @@
 
         <div class="header">
             <h1>Journal de Bord</h1>
-            <p class="subtitle">30 jours pour reprogrammer votre subconscient</p>
+            <p class="subtitle">30 jours pour reprogrammer ton subconscient</p>
         </div>
 
         <div class="quote-section">
@@ -1425,7 +1425,7 @@
         </div>
 
         <div class="progress-section">
-            <h2>Votre Progression</h2>
+            <h2>Ta Progression</h2>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill">0%</div>
             </div>
@@ -1453,7 +1453,7 @@
             </div>
         </div>
 
-        <h2 style="text-align: center; margin-bottom: 20px;">Votre Calendrier de Transformation</h2>
+        <h2 style="text-align: center; margin-bottom: 20px;">Ton Calendrier de Transformation</h2>
         <div class="calendar" id="calendar"></div>
         
         <button class="progress-btn" onclick="showProgressSummary()" style="margin: 20px auto; display: block;">
@@ -1465,7 +1465,7 @@
         <div id="journalEntries"></div>
 
         <div class="chart-container">
-            <h3 class="chart-title">Évolution de votre incarnation de l'état souhaité</h3>
+            <h3 class="chart-title">Évolution de ton incarnation de l'état souhaité</h3>
             <canvas id="incarnationChart"></canvas>
         </div>
 
@@ -1476,14 +1476,14 @@
             <div class="celebration-content">
                 <h2 class="celebration-title">🎉 Félicitations !</h2>
                 <p style="font-size: 1.2em; color: var(--text-secondary); margin-bottom: 20px;">
-                    Vous avez complété les 30 jours de transformation !
+                    Tu as complété les 30 jours de transformation !
                 </p>
                 <p style="font-size: 1.1em; margin-bottom: 30px;">
-                    Votre dévouement et votre persévérance ont porté leurs fruits.
+                    Ton dévouement et ta persévérance ont porté leurs fruits.
                 </p>
                 
                 <div style="background: var(--bg-section); padding: 20px; border-radius: 15px; margin-bottom: 30px;">
-                    <p style="color: var(--text-secondary); margin-bottom: 10px;">Votre récompense exclusive :</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 10px;">Ta récompense exclusive :</p>
                     <div class="promo-code">TRANSFORM30</div>
                 <p style="color: var(--text-secondary); margin-top: 10px;">
     30% de réduction sur <a href="https://sonnycourt.com/formations" target="_blank" style="color: #667eea; text-decoration: underline;">toutes les formations</a><br>
@@ -1691,7 +1691,7 @@ function getCurrentProgramDay() {
     if (auth.isSignInWithEmailLink(window.location.href)) {
         let email = window.localStorage.getItem('emailForSignIn');
         if (!email) {
-            email = window.prompt('Veuillez confirmer votre email pour la connexion');
+            email = window.prompt('Veuille confirmer ton email pour la connexion');
         }
         
         auth.signInWithEmailLink(email, window.location.href)
@@ -1955,17 +1955,17 @@ function getCurrentProgramDay() {
             
             <div class="entry-section">
                 <h3>💫 Mon intention du jour</h3>
-                <textarea id="intention-${dayNumber}" placeholder="Quelle est votre intention pour aujourd'hui après avoir écouté l'audio ?">${entry.intention}</textarea>
+                <textarea id="intention-${dayNumber}" placeholder="Quelle est ton intention pour aujourd'hui après avoir écouté l'audio ?">${entry.intention}</textarea>
             </div>
             
             <div class="entry-section">
                 <h3>🙏 Ma gratitude</h3>
-                <textarea id="gratitude-${dayNumber}" placeholder="Pour quoi êtes-vous reconnaissant aujourd'hui ?">${entry.gratitude}</textarea>
+                <textarea id="gratitude-${dayNumber}" placeholder="Pour quoi es-tu reconnaissant aujourd'hui ?">${entry.gratitude}</textarea>
             </div>
             
             <div class="entry-section">
                 <h3>✨ Ma réflexion</h3>
-                <textarea id="reflection-${dayNumber}" placeholder="Qu'avez-vous ressenti pendant l'audio ? Quelles prises de conscience avez-vous eues ?">${entry.reflection}</textarea>
+                <textarea id="reflection-${dayNumber}" placeholder="Qu'as-tu ressenti pendant l'audio ? Quelles prises de conscience as-tu eues ?">${entry.reflection}</textarea>
             </div>
             
             <div class="entry-section">
@@ -2354,7 +2354,7 @@ function createConfetti() {
 
     // Commencer un nouveau cycle
     function startNewCycle() {
-        if (confirm('Voulez-vous vraiment commencer un nouveau cycle de 30 jours ? Votre progression actuelle sera archivée.')) {
+        if (confirm('Veux-tu vraiment commencer un nouveau cycle de 30 jours ? Ta progression actuelle sera archivée.')) {
             // Archiver les données actuelles
             const archive = {
                 completedAt: new Date().toISOString(),
@@ -2670,24 +2670,24 @@ const daysUntilNext = maxDay < totalDays ? 1 : 0;
     // Message d'encouragement
     if (completedDays < totalDays) {
         const encouragements = [
-            "Continuez ainsi, vous êtes sur la bonne voie ! 🌟",
-            "Chaque jour compte, bravo pour votre persévérance ! 💪",
-            "Votre transformation est en cours, ne lâchez rien ! 🚀",
-            "Vous êtes capable d'aller jusqu'au bout ! 🎯"
+            "Continue ainsi, tu es sur la bonne voie ! 🌟",
+            "Chaque jour compte, bravo pour ta persévérance ! 💪",
+            "Ta transformation est en cours, ne lâche rien ! 🚀",
+            "Tu es capable d'aller jusqu'au bout ! 🎯"
         ];
         const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
         
         html += `
             <div style="text-align: center; margin-top: 30px; padding: 20px; background: var(--bg-section); border-radius: 15px;">
                 <p style="font-size: 1.2em; color: #667eea;">${randomEncouragement}</p>
-                <p style="color: var(--text-secondary); margin-top: 10px;">Plus que ${daysLeft} jours pour compléter votre transformation !</p>
+                <p style="color: var(--text-secondary); margin-top: 10px;">Plus que ${daysLeft} jours pour compléter ta transformation !</p>
             </div>
         `;
     } else {
         html += `
             <div style="text-align: center; margin-top: 30px; padding: 20px; background: var(--bg-section); border-radius: 15px;">
                 <p style="font-size: 1.5em; color: #28a745;">🎉 Félicitations !</p>
-                <p style="color: var(--text-primary); margin-top: 10px;">Vous avez complété les 30 jours de transformation !</p>
+                <p style="color: var(--text-primary); margin-top: 10px;">Tu as complété les 30 jours de transformation !</p>
             </div>
         `;
     }
@@ -2743,15 +2743,15 @@ function loadArchivesContent() {
                     <div style="text-align: center; padding: 40px; color: #666;">
                         <div style="font-size: 3em; margin-bottom: 20px;">📚</div>
                         <h3>Aucun cycle précédent</h3>
-                        <p>Vous n'avez pas encore complété de cycle de 30 jours.</p>
-                        <p>Continuez votre transformation actuelle !</p>
+                        <p>Tu n'as pas encore complété de cycle de 30 jours.</p>
+                        <p>Continue ta transformation actuelle !</p>
                     </div>
                 `;
                 return;
             }
             
             // Construire le HTML des archives
-            let html = '<h3 style="margin-bottom: 20px; color: #667eea;">📚 Vos cycles précédents</h3>';
+            let html = '<h3 style="margin-bottom: 20px; color: #667eea;">📚 Tes cycles précédents</h3>';
             
             // Trier les archives par date (plus récent en premier)
             const sortedArchives = Object.entries(archives)
