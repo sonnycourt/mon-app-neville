@@ -2303,7 +2303,7 @@ function createConfetti() {
         ctx.fillStyle = '#667eea';
         ctx.font = 'bold 64px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('Certificat de Transformation', 600, 200);
+        ctx.fillText('Certificat de Transformation', 600, 150);
         
         // Réinitialiser l'ombre
         ctx.shadowColor = 'transparent';
@@ -2315,21 +2315,21 @@ function createConfetti() {
         ctx.fillStyle = '#764ba2';
         ctx.font = 'italic 28px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('30 Jours de Reprogrammation du Subconscient', 600, 250);
+        ctx.fillText('30 Jours de Reprogrammation du Subconscient', 600, 200);
         
         // Ligne décorative
         ctx.strokeStyle = '#667eea';
         ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.moveTo(200, 280);
-        ctx.lineTo(1000, 280);
+        ctx.moveTo(200, 230);
+        ctx.lineTo(1000, 230);
         ctx.stroke();
         
         // Icône de transformation
         ctx.font = 'bold 48px Arial';
         ctx.fillStyle = '#667eea';
         ctx.textAlign = 'center';
-        ctx.fillText('✨', 600, 350);
+        ctx.fillText('✨', 600, 300);
         
         // Calculer les statistiques
         const entries = Object.values(journalData.entries || {});
@@ -2341,13 +2341,13 @@ function createConfetti() {
         ctx.fillStyle = '#333';
         ctx.font = 'italic 32px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('Ce certificat est décerné à', 600, 420);
+        ctx.fillText('Ce certificat est décerné à', 600, 370);
         
         // Nom de l'utilisateur avec style
         ctx.fillStyle = '#764ba2';
         ctx.font = 'bold 48px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText(currentUser.email, 600, 480);
+        ctx.fillText(currentUser.email, 600, 430);
         
         // Date avec style
         ctx.fillStyle = '#666';
@@ -2358,26 +2358,26 @@ function createConfetti() {
             month: 'long', 
             day: 'numeric' 
         });
-        ctx.fillText('Le ' + date, 600, 530);
+        ctx.fillText('Le ' + date, 600, 480);
         
         // Message de félicitations
         ctx.font = '20px Arial';
         ctx.fillStyle = '#333';
         ctx.textAlign = 'center';
-        ctx.fillText('Pour avoir complété avec succès le programme', 600, 580);
-        ctx.fillText('de transformation personnelle de 30 jours', 600, 610);
-        ctx.fillText('et démontré une persévérance exceptionnelle', 600, 640);
+        ctx.fillText('Pour avoir complété avec succès le programme', 600, 530);
+        ctx.fillText('de transformation personnelle de 30 jours', 600, 560);
+        ctx.fillText('et démontré une persévérance exceptionnelle', 600, 590);
         
         // Signature avec style
         ctx.font = 'bold 32px Arial';
         ctx.fillStyle = '#667eea';
         ctx.textAlign = 'center';
-        ctx.fillText('Sonny Court', 600, 720);
+        ctx.fillText('Sonny Court', 600, 670);
         
         ctx.font = 'italic 18px Arial';
         ctx.fillStyle = '#666';
         ctx.textAlign = 'center';
-        ctx.fillText('Coach en Transformation Personnelle', 600, 745);
+        ctx.fillText('Coach en Transformation Personnelle', 600, 695);
         
         // Télécharger
         canvas.toBlob((blob) => {
