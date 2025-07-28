@@ -1064,6 +1064,10 @@
 
         <h2 style="text-align: center; margin-bottom: 20px;">Votre Calendrier de Transformation</h2>
         <div class="calendar" id="calendar"></div>
+        
+        <button class="progress-btn" onclick="showProgressSummary()" style="margin: 20px auto; display: block;">
+            📊 Ma progression détaillée
+        </button>
 
         <div id="journalEntries"></div>
 
@@ -1558,10 +1562,6 @@ function getCurrentProgramDay() {
             
             <button class="save-btn" onclick="saveEntry(${dayNumber})">
                 ${entry.completed ? '✓ Mettre à jour' : '💾 Sauvegarder'}
-            </button>
-            
-            <button class="progress-btn" onclick="showProgressSummary()" style="margin-top: 15px;">
-                📊 Ma progression détaillée
             </button>
         `;
         
