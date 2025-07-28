@@ -218,13 +218,14 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            background: white;
+            background: var(--bg-card);
             padding: 10px 20px;
             border-radius: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--text-primary);
         }
 
         .logout-btn {
@@ -330,6 +331,7 @@
         .day.selected {
             background: #e9ecef;
             box-shadow: inset 0 0 0 2px #adb5bd;
+            color: #333;
         }
 
         .day.completed {
@@ -1275,6 +1277,40 @@
 
         body.dark-mode .star:hover {
             color: #FFD700;
+        }
+
+        /* Amélioration du contraste pour les cases sélectionnées en thème sombre */
+        body.dark-mode .day.selected {
+            background: #2a2a2a;
+            box-shadow: inset 0 0 0 2px #667eea;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .day.selected .day-number {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .day.selected .day-label {
+            color: #b0b0b0;
+        }
+
+        /* Amélioration de la lisibilité de l'email en thème sombre */
+        body.dark-mode .user-info {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        body.dark-mode .user-info #userEmail {
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .logout-btn {
+            color: #667eea;
+        }
+
+        body.dark-mode .logout-btn:hover {
+            color: #764ba2;
         }
    </style>
     
