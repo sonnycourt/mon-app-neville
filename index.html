@@ -1230,6 +1230,24 @@
             color: var(--text-secondary);
         }
 
+        /* Styles spécifiques pour les cases complétées en mode sombre */
+        body.dark-mode .progress-day-box.completed {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-color: #28a745;
+        }
+
+        body.dark-mode .progress-day-box.completed .day-number {
+            color: white;
+        }
+
+        body.dark-mode .progress-day-box.completed .day-label {
+            color: #e8f5e8;
+        }
+
+        body.dark-mode .progress-day-box.completed .day-status {
+            color: white;
+        }
+
         body.dark-mode .progress-entry h4 {
             color: #667eea;
         }
