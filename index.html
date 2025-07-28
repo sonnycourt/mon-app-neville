@@ -1072,7 +1072,6 @@
             <canvas id="incarnationChart"></canvas>
         </div>
 
-        <button class="progress-btn" onclick="showProgressSummary()">📊 Ma progression détaillée</button>
         <button class="export-btn" onclick="exportJournal()">📥 Exporter mon journal</button>
 
         <!-- Modal de célébration -->
@@ -1559,6 +1558,10 @@ function getCurrentProgramDay() {
             
             <button class="save-btn" onclick="saveEntry(${dayNumber})">
                 ${entry.completed ? '✓ Mettre à jour' : '💾 Sauvegarder'}
+            </button>
+            
+            <button class="progress-btn" onclick="showProgressSummary()" style="margin-top: 15px;">
+                📊 Ma progression détaillée
             </button>
         `;
         
