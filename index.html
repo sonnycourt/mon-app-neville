@@ -2268,60 +2268,105 @@ function createConfetti() {
         document.getElementById('celebrationModal').style.display = 'none';
     }
 
-    // Générer le certificat
+    // Générer le certificat design
     function generateCertificate() {
         const canvas = document.createElement('canvas');
-        canvas.width = 800;
-        canvas.height = 600;
+        canvas.width = 1200;
+        canvas.height = 800;
         const ctx = canvas.getContext('2d');
         
-        // Fond blanc
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, 800, 600);
+        // Créer un dégradé de fond
+        const gradient = ctx.createLinearGradient(0, 0, 0, 800);
+        gradient.addColorStop(0, '#f8f9ff');
+        gradient.addColorStop(1, '#e8ecff');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1200, 800);
         
-        // Bordure
+        // Bordure décorative
         ctx.strokeStyle = '#667eea';
-        ctx.lineWidth = 5;
-        ctx.strokeRect(20, 20, 760, 560);
+        ctx.lineWidth = 8;
+        ctx.strokeRect(30, 30, 1140, 740);
         
-        // Titre
+        // Bordure intérieure
+        ctx.strokeStyle = '#764ba2';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(50, 50, 1100, 700);
+        
+        // Motif décoratif en haut
         ctx.fillStyle = '#667eea';
-        ctx.font = 'bold 48px Arial';
+        ctx.font = 'bold 72px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('Certificat de Transformation', 400, 100);
+        ctx.fillText('🎉', 400, 120);
+        ctx.fillText('🎉', 800, 120);
         
-        // Sous-titre
-        ctx.font = '24px Arial';
-        ctx.fillText('30 Jours de Reprogrammation du Subconscient', 400, 150);
+        // Titre principal avec ombre
+        ctx.shadowColor = 'rgba(102, 126, 234, 0.3)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        ctx.fillStyle = '#667eea';
+        ctx.font = 'bold 64px Arial';
+        ctx.fillText('Certificat de Transformation', 600, 200);
         
-        // Nom
+        // Réinitialiser l'ombre
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        
+        // Sous-titre élégant
+        ctx.fillStyle = '#764ba2';
+        ctx.font = 'italic 28px Arial';
+        ctx.fillText('30 Jours de Reprogrammation du Subconscient', 600, 250);
+        
+        // Ligne décorative
+        ctx.strokeStyle = '#667eea';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(200, 280);
+        ctx.lineTo(1000, 280);
+        ctx.stroke();
+        
+        // Icône de transformation
+        ctx.font = 'bold 48px Arial';
+        ctx.fillStyle = '#667eea';
+        ctx.fillText('✨', 600, 350);
+        
+        // Texte "Décerné à"
         ctx.fillStyle = '#333';
         ctx.font = 'italic 32px Arial';
-        ctx.fillText('Décerné à', 400, 250);
+        ctx.fillText('Ce certificat est décerné à', 600, 420);
         
-        ctx.font = 'bold 36px Arial';
+        // Nom de l'utilisateur avec style
         ctx.fillStyle = '#764ba2';
-        ctx.fillText(currentUser.email, 400, 300);
+        ctx.font = 'bold 48px Arial';
+        ctx.fillText(currentUser.email, 600, 480);
         
-        // Date
+        // Date avec style
         ctx.fillStyle = '#666';
-        ctx.font = '20px Arial';
+        ctx.font = '24px Arial';
         const date = new Date().toLocaleDateString('fr-FR', { 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric' 
         });
-        ctx.fillText('Le ' + date, 400, 380);
+        ctx.fillText('Le ' + date, 600, 530);
         
-        // Message
-        ctx.font = '18px Arial';
-        ctx.fillText('Pour avoir complété avec succès le programme', 400, 450);
-        ctx.fillText('de transformation personnelle de 30 jours', 400, 480);
+        // Message de félicitations
+        ctx.font = '20px Arial';
+        ctx.fillStyle = '#333';
+        ctx.fillText('Pour avoir complété avec succès le programme', 600, 580);
+        ctx.fillText('de transformation personnelle de 30 jours', 600, 610);
+        ctx.fillText('et démontré une persévérance exceptionnelle', 600, 640);
         
-        // Signature
-        ctx.font = 'italic 24px Arial';
+        // Signature avec style
+        ctx.font = 'bold 32px Arial';
         ctx.fillStyle = '#667eea';
-        ctx.fillText('Sonny Court', 400, 540);
+        ctx.fillText('Sonny Court', 600, 720);
+        
+        ctx.font = 'italic 18px Arial';
+        ctx.fillStyle = '#666';
+        ctx.fillText('Coach en Transformation Personnelle', 600, 750);
         
         // Télécharger
         canvas.toBlob((blob) => {
