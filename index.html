@@ -1779,6 +1779,9 @@ function getCurrentProgramDay() {
         document.getElementById('mainContainer').classList.add('active');
         document.getElementById('userEmail').textContent = currentUser.email;
         
+        // Initialiser le thème après la connexion
+        initTheme();
+        
         // Vérifier si c'est un nouveau compte sans données
         const userId = currentUser.uid;
         database.ref('users/' + userId + '/journal').once('value')
@@ -2923,8 +2926,7 @@ function toggleTheme() {
     }
 }
 
-// Initialiser le thème au chargement
-document.addEventListener('DOMContentLoaded', initTheme);
+// Le thème sera initialisé après la connexion de l'utilisateur
     
     </script>
 
