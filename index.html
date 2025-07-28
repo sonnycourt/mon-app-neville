@@ -979,6 +979,45 @@
             transform: translateY(-2px);
         }
 
+        /* Styles pour les onglets */
+        .progress-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .progress-tab {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .progress-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .progress-tab:hover:not(.active) {
+            background: #f8f9fa;
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .celebration-btn {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: white;
@@ -2298,20 +2337,236 @@ document.getElementById('progressSummaryModal').addEventListener('click', functi
         closeProgressSummary();
     }
 });
+
+// Fonction pour changer d'onglet
+function switchTab(tabName) {
+    // Mettre à jour les onglets
+    document.querySelectorAll('.progress-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.add('active');
+    
+    // Mettre à jour le contenu
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1) + 'Content').classList.add('active');
+    
+    // Charger le contenu approprié
+    if (tabName === 'archives') {
+        loadArchivesContent();
+    }
+}
+
+// Fonction pour charger le contenu des archives
+function loadArchivesContent() {
+    const archivesContent = document.getElementById('archivesContent');
+    
+    // Charger les archives depuis Firebase
+    const userId = currentUser.uid;
+    database.ref('users/' + userId + '/archives').once('value')
+        .then((snapshot) => {
+            const archives = snapshot.val();
+            
+            if (!archives || Object.keys(archives).length === 0) {
+                archivesContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <div style="font-size: 3em; margin-bottom: 20px;">📚</div>
+                        <h3>Aucun cycle précédent</h3>
+                        <p>Vous n'avez pas encore complété de cycle de 30 jours.</p>
+                        <p>Continuez votre transformation actuelle !</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Construire le HTML des archives
+            let html = '<h3 style="margin-bottom: 20px; color: #667eea;">📚 Vos cycles précédents</h3>';
+            
+            // Trier les archives par date (plus récent en premier)
+            const sortedArchives = Object.entries(archives)
+                .sort((a, b) => parseInt(b[0]) - parseInt(a[0]));
+            
+            sortedArchives.forEach(([timestamp, archive]) => {
+                const completedAt = new Date(archive.completedAt);
+                const data = archive.data;
+                const daysCompleted = data.stats?.daysCompleted || 0;
+                const avgIncarnation = data.entries ? 
+                    Object.values(data.entries)
+                        .filter(e => e.incarnation && e.incarnation > 0)
+                        .map(e => e.incarnation)
+                        .reduce((a, b) => a + b, 0) / 
+                        Object.values(data.entries).filter(e => e.incarnation && e.incarnation > 0).length || 0 : 0;
+                
+                html += `
+                    <div class="archive-item" style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid #667eea;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h4 style="color: #667eea; margin: 0;">Cycle terminé le ${completedAt.toLocaleDateString('fr-FR')}</h4>
+                            <button class="archive-details-btn" onclick="showArchiveDetails('${timestamp}')" style="background: #667eea; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.9em;">
+                                Voir détails
+                            </button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5em; font-weight: bold; color: #667eea;">${daysCompleted}/30</div>
+                                <div style="font-size: 0.9em; color: #666;">Jours complétés</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5em; font-weight: bold; color: #667eea;">${avgIncarnation.toFixed(1)}/10</div>
+                                <div style="font-size: 0.9em; color: #666;">Moy. incarnation</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5em; font-weight: bold; color: #667eea;">${Math.round((daysCompleted / 30) * 100)}%</div>
+                                <div style="font-size: 0.9em; color: #666;">Progression</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            archivesContent.innerHTML = html;
+        })
+        .catch((error) => {
+            console.error('Erreur lors du chargement des archives:', error);
+            archivesContent.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <div style="font-size: 3em; margin-bottom: 20px;">❌</div>
+                    <h3>Erreur de chargement</h3>
+                    <p>Impossible de charger vos archives pour le moment.</p>
+                </div>
+            `;
+        });
+}
+
+// Fonction pour afficher les détails d'une archive
+function showArchiveDetails(timestamp) {
+    const userId = currentUser.uid;
+    database.ref('users/' + userId + '/archives/' + timestamp).once('value')
+        .then((snapshot) => {
+            const archive = snapshot.val();
+            if (archive) {
+                // Créer un modal pour afficher les détails
+                const detailsModal = document.createElement('div');
+                detailsModal.className = 'progress-modal active';
+                detailsModal.style.zIndex = '9998';
+                detailsModal.innerHTML = `
+                    <div class="progress-content" style="max-width: 600px;">
+                        <div class="progress-header">
+                            <h2 class="progress-title">📚 Détails du cycle</h2>
+                            <button class="close-progress-btn" onclick="this.closest('.progress-modal').remove()">&times;</button>
+                        </div>
+                        <div id="archiveDetailsContent">
+                            <!-- Rempli dynamiquement -->
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(detailsModal);
+                
+                // Remplir le contenu
+                const detailsContent = document.getElementById('archiveDetailsContent');
+                const data = archive.data;
+                const completedAt = new Date(archive.completedAt);
+                
+                let html = `
+                    <p style="color: #666; margin-bottom: 20px;">
+                        Cycle terminé le ${completedAt.toLocaleDateString('fr-FR')}
+                    </p>
+                `;
+                
+                // Statistiques
+                const daysCompleted = data.stats?.daysCompleted || 0;
+                const avgIncarnation = data.entries ? 
+                    Object.values(data.entries)
+                        .filter(e => e.incarnation && e.incarnation > 0)
+                        .map(e => e.incarnation)
+                        .reduce((a, b) => a + b, 0) / 
+                        Object.values(data.entries).filter(e => e.incarnation && e.incarnation > 0).length || 0 : 0;
+                
+                html += `
+                    <div class="progress-stats-grid">
+                        <div class="progress-stat-card">
+                            <div class="progress-stat-value">${daysCompleted}/30</div>
+                            <div class="progress-stat-label">Jours complétés</div>
+                        </div>
+                        <div class="progress-stat-card">
+                            <div class="progress-stat-value">${Math.round((daysCompleted / 30) * 100)}%</div>
+                            <div class="progress-stat-label">Progression</div>
+                        </div>
+                        <div class="progress-stat-card">
+                            <div class="progress-stat-value">${avgIncarnation.toFixed(1)}/10</div>
+                            <div class="progress-stat-label">Moy. Incarnation</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Entrées complétées
+                const completedEntries = Object.entries(data.entries || {})
+                    .filter(([_, entry]) => entry.completed)
+                    .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+                
+                if (completedEntries.length > 0) {
+                    html += `
+                        <h3 style="margin: 30px 0 20px; color: #667eea;">📝 Entrées du cycle</h3>
+                        <div class="progress-entries">
+                    `;
+                    
+                    completedEntries.forEach(([day, entry]) => {
+                        html += `
+                            <div class="progress-entry">
+                                <h4>Jour ${day}</h4>
+                                ${entry.intention ? `<p><strong>Intention:</strong> ${entry.intention}</p>` : ''}
+                                ${entry.gratitude ? `<p><strong>Gratitude:</strong> ${entry.gratitude}</p>` : ''}
+                                ${entry.reflection ? `<p><strong>Réflexion:</strong> ${entry.reflection}</p>` : ''}
+                                <p><strong>Incarnation:</strong> ${entry.incarnation || '-'}/10</p>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`;
+                }
+                
+                detailsContent.innerHTML = html;
+            }
+        })
+        .catch((error) => {
+            console.error('Erreur lors du chargement des détails:', error);
+        });
+}
     
     </script>
 
     <!-- Modal de progression -->
     <div class="progress-modal" id="progressSummaryModal">
-        <div class="progress-content">
-            <div class="progress-header">
-                <h2 class="progress-title">📊 Ma Progression Détaillée</h2>
-                <button class="close-progress-btn" onclick="closeProgressSummary()">&times;</button>
-            </div>
+            <div class="progress-content">
+        <div class="progress-header">
+            <h2 class="progress-title">📊 Ma Progression Détaillée</h2>
+            <button class="close-progress-btn" onclick="closeProgressSummary()">&times;</button>
+        </div>
+        
+        <!-- Onglets -->
+        <div class="progress-tabs">
+            <button class="progress-tab active" onclick="switchTab('current')" id="tabCurrent">
+                🔄 Cycle actuel
+            </button>
+            <button class="progress-tab" onclick="switchTab('archives')" id="tabArchives">
+                📚 Mes archives
+            </button>
+        </div>
+        
+        <!-- Contenu des onglets -->
+        <div id="tabCurrentContent" class="tab-content active">
             <div id="progressSummaryContent">
                 <!-- Rempli dynamiquement -->
             </div>
         </div>
+        
+        <div id="tabArchivesContent" class="tab-content">
+            <div id="archivesContent">
+                <!-- Rempli dynamiquement -->
+            </div>
+        </div>
+    </div>
     </div>
 </body>
 </html>
