@@ -2085,8 +2085,10 @@ function showProgressSummary() {
     const avgIncarnation = incarnations.length > 0 ? 
         (incarnations.reduce((a, b) => a + b, 0) / incarnations.length).toFixed(1) : '-';
     
-    // Calculer les jours restants
-    const daysLeft = totalDays - completedDays;
+    // Calculer les jours restants basés sur le programme
+const maxDay = getCurrentProgramDay();
+const daysLeft = totalDays - maxDay;
+const daysUntilNext = maxDay < totalDays ? 1 : 0;
     
     // Date de début et estimation de fin
     const firstEntry = Object.values(journalData.entries)
