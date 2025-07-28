@@ -2302,6 +2302,7 @@ function createConfetti() {
         ctx.shadowOffsetY = 2;
         ctx.fillStyle = '#667eea';
         ctx.font = 'bold 64px Arial';
+        ctx.textAlign = 'center';
         ctx.fillText('Certificat de Transformation', 600, 200);
         
         // Réinitialiser l'ombre
@@ -2313,6 +2314,7 @@ function createConfetti() {
         // Sous-titre élégant
         ctx.fillStyle = '#764ba2';
         ctx.font = 'italic 28px Arial';
+        ctx.textAlign = 'center';
         ctx.fillText('30 Jours de Reprogrammation du Subconscient', 600, 250);
         
         // Ligne décorative
@@ -2326,6 +2328,7 @@ function createConfetti() {
         // Icône de transformation
         ctx.font = 'bold 48px Arial';
         ctx.fillStyle = '#667eea';
+        ctx.textAlign = 'center';
         ctx.fillText('✨', 600, 350);
         
         // Calculer les statistiques
@@ -2337,16 +2340,19 @@ function createConfetti() {
         // Texte "Décerné à"
         ctx.fillStyle = '#333';
         ctx.font = 'italic 32px Arial';
+        ctx.textAlign = 'center';
         ctx.fillText('Ce certificat est décerné à', 600, 420);
         
         // Nom de l'utilisateur avec style
         ctx.fillStyle = '#764ba2';
         ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
         ctx.fillText(currentUser.email, 600, 480);
         
         // Date avec style
         ctx.fillStyle = '#666';
         ctx.font = '24px Arial';
+        ctx.textAlign = 'center';
         const date = new Date().toLocaleDateString('fr-FR', { 
             year: 'numeric', 
             month: 'long', 
@@ -2357,6 +2363,7 @@ function createConfetti() {
         // Message de félicitations
         ctx.font = '20px Arial';
         ctx.fillStyle = '#333';
+        ctx.textAlign = 'center';
         ctx.fillText('Pour avoir complété avec succès le programme', 600, 580);
         ctx.fillText('de transformation personnelle de 30 jours', 600, 610);
         ctx.fillText('et démontré une persévérance exceptionnelle', 600, 640);
@@ -2364,10 +2371,12 @@ function createConfetti() {
         // Signature avec style
         ctx.font = 'bold 32px Arial';
         ctx.fillStyle = '#667eea';
+        ctx.textAlign = 'center';
         ctx.fillText('Sonny Court', 600, 720);
         
         ctx.font = 'italic 18px Arial';
         ctx.fillStyle = '#666';
+        ctx.textAlign = 'center';
         ctx.fillText('Coach en Transformation Personnelle', 600, 745);
         
         // Télécharger
