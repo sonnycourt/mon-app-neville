@@ -978,6 +978,26 @@
             color: white;
             transform: translateY(-2px);
         }
+
+        .celebration-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .celebration-btn:hover {
+            background: linear-gradient(135deg, #FFA500, #FF8C00);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
    </style>
     
     <!-- Firebase SDK -->
@@ -1067,6 +1087,11 @@
         
         <button class="progress-btn" onclick="showProgressSummary()" style="margin: 20px auto; display: block;">
             📊 Ma progression détaillée
+        </button>
+        
+        <!-- Bouton de célébration (visible seulement si terminé) -->
+        <button class="celebration-btn" onclick="showCelebration()" style="margin: 20px auto; display: none;" id="celebrationBtn">
+            🎉 Voir ma célébration
         </button>
 
         <div id="journalEntries"></div>
@@ -1684,6 +1709,14 @@ if (dayNumber === 1 && !journalData.startDate) {
         // Vérifier si on vient de compléter les 30 jours
         if (journalData.entries[30] && journalData.entries[30].completed) {
             checkCompletion();
+        }
+        
+        // Afficher le bouton de célébration si terminé
+        const celebrationBtn = document.getElementById('celebrationBtn');
+        if (journalData.entries[30] && journalData.entries[30].completed) {
+            celebrationBtn.style.display = 'block';
+        } else {
+            celebrationBtn.style.display = 'none';
         }
     }
 
