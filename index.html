@@ -1037,6 +1037,133 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
         }
+
+        /* Variables pour les thèmes */
+        :root {
+            /* Thème clair (par défaut) */
+            --bg-primary: #667eea;
+            --bg-secondary: #764ba2;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-body: var(--bg-gradient);
+            --bg-container: rgba(255, 255, 255, 0.95);
+            --bg-section: #f8f9fa;
+            --bg-card: white;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --border-color: #e0e0e0;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Thème sombre */
+        body.dark-mode {
+            --bg-body: #0a0a0a;
+            --bg-container: rgba(20, 20, 20, 0.98);
+            --bg-section: #1a1a1a;
+            --bg-card: #242424;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #333;
+            --shadow: rgba(102, 126, 234, 0.2);
+        }
+
+        /* Appliquer les variables */
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            background: var(--bg-container);
+        }
+
+        .journal-entry, .progress-section, .quote-section {
+            background: var(--bg-section);
+            color: var(--text-primary);
+        }
+
+        .day {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        textarea {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        .subtitle, .entry-date, .stat-label {
+            color: var(--text-secondary);
+        }
+
+        /* Bouton toggle dark mode */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        body.dark-mode .theme-toggle {
+            background: #333;
+            border: 2px solid #667eea;
+        }
+
+        /* Ajustements spécifiques dark mode */
+        body.dark-mode .day.completed {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        body.dark-mode .incarnation-scale {
+            background: #1a1a1a;
+        }
+
+        body.dark-mode .scale-number {
+            background: #333;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .scale-number:hover {
+            background: #444;
+        }
+
+        body.dark-mode .auth-container {
+            background: rgba(20, 20, 20, 0.98);
+        }
+
+        body.dark-mode .auth-input {
+            background: #1a1a1a;
+            border-color: #333;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .quote-section {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 1px solid #333;
+        }
    </style>
     
     <!-- Firebase SDK -->
@@ -2537,6 +2664,39 @@ function showArchiveDetails(timestamp) {
             console.error('Erreur lors du chargement des détails:', error);
         });
 }
+
+// Système de thème sombre
+function initTheme() {
+    // Vérifier la préférence sauvegardée
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Appliquer le thème
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeIcon').textContent = '☀️';
+    }
+}
+
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if (body.classList.contains('dark-mode')) {
+        // Passer en mode clair
+        body.classList.remove('dark-mode');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        // Passer en mode sombre
+        body.classList.add('dark-mode');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Initialiser le thème au chargement
+document.addEventListener('DOMContentLoaded', initTheme);
     
     </script>
 
@@ -2570,7 +2730,12 @@ function showArchiveDetails(timestamp) {
                 <!-- Rempli dynamiquement -->
             </div>
         </div>
+            </div>
     </div>
-    </div>
+
+    <!-- Bouton toggle thème -->
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span>
+    </button>
 </body>
 </html>
