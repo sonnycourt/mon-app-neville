@@ -1400,7 +1400,29 @@ function getCurrentProgramDay() {
         document.getElementById('authContainer').classList.remove('active');
         document.getElementById('mainContainer').classList.add('active');
         document.getElementById('userEmail').textContent = currentUser.email;
-        initializeApp();
+        
+        // Vérifier si c'est un nouveau compte sans données
+        const userId = currentUser.uid;
+        database.ref('users/' + userId + '/journal').once('value')
+            .then((snapshot) => {
+                const data = snapshot.val();
+                
+                // Si pas de données ou compte vide = nouveau compte
+                if (!data || !data.entries || Object.keys(data.entries || {}).length === 0) {
+                    // Nettoyer tout le localStorage lié au journal
+                    localStorage.removeItem('journalStartDate');
+                    localStorage.removeItem('celebrated_' + userId);
+                    localStorage.removeItem('review_day3_' + userId);
+                    console.log('✨ Nouveau compte - localStorage nettoyé');
+                }
+                
+                // Continuer l'initialisation
+                initializeApp();
+            })
+            .catch(() => {
+                // En cas d'erreur, initialiser quand même
+                initializeApp();
+            });
     }
 
     function logout() {
