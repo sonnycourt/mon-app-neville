@@ -2751,7 +2751,7 @@ function loadArchivesContent() {
                         Object.values(data.entries).filter(e => e.incarnation && e.incarnation > 0).length || 0 : 0;
                 
                 html += `
-                    <div class="archive-item" style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid #667eea;">
+                    <div class="archive-item" style="background: var(--bg-section); padding: 20px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid #667eea; color: var(--text-primary);">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                             <h4 style="color: #667eea; margin: 0;">Cycle terminé le ${completedAt.toLocaleDateString('fr-FR')}</h4>
                             <button class="archive-details-btn" onclick="showArchiveDetails('${timestamp}')" style="background: #667eea; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.9em;">
@@ -2761,15 +2761,15 @@ function loadArchivesContent() {
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
                             <div style="text-align: center;">
                                 <div style="font-size: 1.5em; font-weight: bold; color: #667eea;">${daysCompleted}/30</div>
-                                <div style="font-size: 0.9em; color: #666;">Jours complétés</div>
+                                <div style="font-size: 0.9em; color: var(--text-secondary);">Jours complétés</div>
                             </div>
                             <div style="text-align: center;">
                                 <div style="font-size: 1.5em; font-weight: bold; color: #667eea;">${avgIncarnation.toFixed(1)}/10</div>
-                                <div style="font-size: 0.9em; color: #666;">Moy. incarnation</div>
+                                <div style="font-size: 0.9em; color: var(--text-secondary);">Moy. incarnation</div>
                             </div>
                             <div style="text-align: center;">
                                 <div style="font-size: 1.5em; font-weight: bold; color: #667eea;">${Math.round((daysCompleted / 30) * 100)}%</div>
-                                <div style="font-size: 0.9em; color: #666;">Progression</div>
+                                <div style="font-size: 0.9em; color: var(--text-secondary);">Progression</div>
                             </div>
                         </div>
                     </div>
@@ -2781,7 +2781,7 @@ function loadArchivesContent() {
         .catch((error) => {
             console.error('Erreur lors du chargement des archives:', error);
             archivesContent.innerHTML = `
-                <div style="text-align: center; padding: 40px; color: #666;">
+                <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
                     <div style="font-size: 3em; margin-bottom: 20px;">❌</div>
                     <h3>Erreur de chargement</h3>
                     <p>Impossible de charger vos archives pour le moment.</p>
@@ -2821,7 +2821,7 @@ function showArchiveDetails(timestamp) {
                 const completedAt = new Date(archive.completedAt);
                 
                 let html = `
-                    <p style="color: #666; margin-bottom: 20px;">
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">
                         Cycle terminé le ${completedAt.toLocaleDateString('fr-FR')}
                     </p>
                 `;
