@@ -817,11 +817,167 @@
     margin-bottom: 20px;
 }
 
-.review-success-message {
-    font-size: 1.3em;
-    color: #666;
-    margin-bottom: 30px;
-}
+        .review-success-message {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Modal de progression */
+        .progress-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .progress-modal.active {
+            display: flex;
+        }
+
+        .progress-content {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .progress-title {
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .close-progress-btn {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close-progress-btn:hover {
+            color: #333;
+        }
+
+        .progress-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .progress-stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .progress-days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .progress-day-box {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .progress-day-box.completed {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-color: #28a745;
+        }
+
+        .progress-day-box.completed .day-status {
+            color: #28a745;
+        }
+
+        .progress-entries {
+            margin-top: 30px;
+        }
+
+        .progress-entry {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .progress-entry h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .progress-entry p {
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .progress-entry strong {
+            color: #764ba2;
+        }
+
+        .progress-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .progress-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
    </style>
     
     <!-- Firebase SDK -->
@@ -917,6 +1073,7 @@
         </div>
 
         <button class="export-btn" onclick="exportJournal()">📥 Exporter mon journal</button>
+        <button class="progress-btn" onclick="showProgressSummary()">📊 Ma progression détaillée</button>
 
         <!-- Modal de célébration -->
         <div class="celebration-modal" id="celebrationModal">
@@ -1907,10 +2064,159 @@ async function submitReview() {
         console.error('Erreur lors de l\'envoi:', error);
         submitBtn.disabled = false;
         submitBtn.textContent = 'Envoyer mon avis';
-        alert('Une erreur est survenue. Veuillez réessayer.');
+                alert('Une erreur est survenue. Veuillez réessayer.');
     }
 }
+
+// Fonction pour afficher le résumé de progression
+function showProgressSummary() {
+    const modal = document.getElementById('progressSummaryModal');
+    const content = document.getElementById('progressSummaryContent');
+    
+    // Calculer les statistiques
+    const totalDays = 30;
+    const completedDays = journalData.stats.daysCompleted || 0;
+    const progressPercent = Math.round((completedDays / totalDays) * 100);
+    
+    // Calculer la moyenne d'incarnation
+    const incarnations = Object.values(journalData.entries)
+        .filter(e => e.incarnation && e.incarnation > 0)
+        .map(e => e.incarnation);
+    const avgIncarnation = incarnations.length > 0 ? 
+        (incarnations.reduce((a, b) => a + b, 0) / incarnations.length).toFixed(1) : '-';
+    
+    // Calculer les jours restants
+    const daysLeft = totalDays - completedDays;
+    
+    // Date de début et estimation de fin
+    const firstEntry = Object.values(journalData.entries)
+        .filter(e => e.date)
+        .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+    const startDate = firstEntry ? new Date(firstEntry.date).toLocaleDateString('fr-FR') : '-';
+    
+    // Construire le HTML
+    let html = `
+        <div class="progress-stats-grid">
+            <div class="progress-stat-card">
+                <div class="progress-stat-value">${completedDays}/${totalDays}</div>
+                <div class="progress-stat-label">Jours complétés</div>
+            </div>
+            <div class="progress-stat-card">
+                <div class="progress-stat-value">${progressPercent}%</div>
+                <div class="progress-stat-label">Progression</div>
+            </div>
+            <div class="progress-stat-card">
+                <div class="progress-stat-value">${avgIncarnation}/10</div>
+                <div class="progress-stat-label">Moy. Incarnation</div>
+            </div>
+            <div class="progress-stat-card">
+                <div class="progress-stat-value">${journalData.stats.currentStreak || 0}</div>
+                <div class="progress-stat-label">Streak actuel</div>
+            </div>
+        </div>
+        
+        <h3 style="margin: 30px 0 20px; color: #667eea;">📅 Détail par jour</h3>
+        <div class="progress-days-grid">
+    `;
+    
+    // Ajouter les jours
+    for (let i = 1; i <= totalDays; i++) {
+        const entry = journalData.entries[i];
+        const isCompleted = entry && entry.completed;
+        const incarnation = entry && entry.incarnation ? entry.incarnation : '-';
+        
+        html += `
+            <div class="progress-day-box ${isCompleted ? 'completed' : ''}">
+                <div style="font-weight: bold;">Jour ${i}</div>
+                <div class="day-status">${isCompleted ? '✓' : '-'}</div>
+                <div style="font-size: 0.9em; color: #666;">${isCompleted ? incarnation + '/10' : ''}</div>
+            </div>
+        `;
+    }
+    
+    html += `</div>`;
+    
+    // Ajouter les dernières entrées
+    const completedEntries = Object.entries(journalData.entries)
+        .filter(([_, entry]) => entry.completed)
+        .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
+        .slice(0, 3);
+    
+    if (completedEntries.length > 0) {
+        html += `
+            <h3 style="margin: 30px 0 20px; color: #667eea;">📝 Dernières entrées</h3>
+            <div class="progress-entries">
+        `;
+        
+        completedEntries.forEach(([day, entry]) => {
+            html += `
+                <div class="progress-entry">
+                    <h4>Jour ${day}</h4>
+                    ${entry.intention ? `<p><strong>Intention:</strong> ${entry.intention}</p>` : ''}
+                    ${entry.gratitude ? `<p><strong>Gratitude:</strong> ${entry.gratitude}</p>` : ''}
+                    ${entry.reflection ? `<p><strong>Réflexion:</strong> ${entry.reflection}</p>` : ''}
+                    <p><strong>Incarnation:</strong> ${entry.incarnation || '-'}/10</p>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+    }
+    
+    // Message d'encouragement
+    if (completedDays < totalDays) {
+        const encouragements = [
+            "Continuez ainsi, vous êtes sur la bonne voie ! 🌟",
+            "Chaque jour compte, bravo pour votre persévérance ! 💪",
+            "Votre transformation est en cours, ne lâchez rien ! 🚀",
+            "Vous êtes capable d'aller jusqu'au bout ! 🎯"
+        ];
+        const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+        
+        html += `
+            <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f0f4ff; border-radius: 15px;">
+                <p style="font-size: 1.2em; color: #667eea;">${randomEncouragement}</p>
+                <p style="color: #666; margin-top: 10px;">Plus que ${daysLeft} jours pour compléter votre transformation !</p>
+            </div>
+        `;
+    } else {
+        html += `
+            <div style="text-align: center; margin-top: 30px; padding: 20px; background: #d4edda; border-radius: 15px;">
+                <p style="font-size: 1.5em; color: #28a745;">🎉 Félicitations !</p>
+                <p style="color: #155724; margin-top: 10px;">Vous avez complété les 30 jours de transformation !</p>
+            </div>
+        `;
+    }
+    
+    content.innerHTML = html;
+    modal.classList.add('active');
+}
+
+// Fonction pour fermer le modal
+function closeProgressSummary() {
+    document.getElementById('progressSummaryModal').classList.remove('active');
+}
+
+// Fermer en cliquant à l'extérieur
+document.getElementById('progressSummaryModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeProgressSummary();
+    }
+});
     
     </script>
+
+    <!-- Modal de progression -->
+    <div class="progress-modal" id="progressSummaryModal">
+        <div class="progress-content">
+            <div class="progress-header">
+                <h2 class="progress-title">📊 Ma Progression Détaillée</h2>
+                <button class="close-progress-btn" onclick="closeProgressSummary()">&times;</button>
+            </div>
+            <div id="progressSummaryContent">
+                <!-- Rempli dynamiquement -->
+            </div>
+        </div>
+    </div>
 </body>
 </html>
