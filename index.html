@@ -1427,6 +1427,10 @@ function getCurrentProgramDay() {
                 const data = snapshot.val();
                 if (data) {
                     journalData = data;
+                    
+                    // AJOUTER ICI
+                    migrateExistingUsers();
+                    
                     // Synchroniser la date de début si elle existe dans Firebase
                     if (journalData.startDate) {
                         localStorage.setItem('journalStartDate', journalData.startDate);
@@ -1965,6 +1969,31 @@ function createConfetti() {
     // === SYSTÈME DE REVIEW ===
 let selectedRating = 0;
 let reviewSubmitted = false;
+
+// Fonction pour migrer les comptes existants
+function migrateExistingUsers() {
+    // Si pas de startDate dans Firebase mais des entrées existent
+    if (!journalData.startDate && Object.keys(journalData.entries).length > 0) {
+        // Trouver la première entrée
+        const firstEntry = Object.values(journalData.entries)
+            .filter(e => e.date)
+            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+        
+        if (firstEntry) {
+            // Calculer la date de début basée sur la première entrée
+            const firstEntryDate = new Date(firstEntry.date);
+            journalData.startDate = firstEntryDate.toISOString();
+            
+            // Sauvegarder dans Firebase
+            saveToFirebase(journalData);
+            
+            // Et dans localStorage
+            localStorage.setItem('journalStartDate', firstEntryDate.toISOString());
+            
+            console.log('✅ Migration effectuée ! Date de début :', firstEntryDate);
+        }
+    }
+}
 
 // Initialiser les étoiles
 function initializeReviewSystem() {
