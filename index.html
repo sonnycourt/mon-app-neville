@@ -843,7 +843,7 @@
         }
 
         .progress-content {
-            background: white;
+            background: var(--bg-card);
             border-radius: 30px;
             padding: 40px;
             max-width: 800px;
@@ -852,6 +852,7 @@
             overflow-y: auto;
             animation: slideUp 0.4s ease;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            color: var(--text-primary);
         }
 
         .progress-header {
@@ -873,12 +874,12 @@
             border: none;
             font-size: 2em;
             cursor: pointer;
-            color: #999;
+            color: var(--text-secondary);
             transition: color 0.3s;
         }
 
         .close-progress-btn:hover {
-            color: #333;
+            color: var(--text-primary);
         }
 
         .progress-stats-grid {
@@ -889,11 +890,12 @@
         }
 
         .progress-stat-card {
-            background: #f8f9fa;
+            background: var(--bg-section);
             padding: 20px;
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            color: var(--text-primary);
         }
 
         .progress-stat-value {
@@ -905,7 +907,7 @@
         }
 
         .progress-stat-label {
-            color: #666;
+            color: var(--text-secondary);
             margin-top: 5px;
         }
 
@@ -917,12 +919,13 @@
         }
 
         .progress-day-box {
-            background: #f0f0f0;
+            background: var(--bg-section);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
             border: 2px solid transparent;
             transition: all 0.3s ease;
+            color: var(--text-primary);
         }
 
         .progress-day-box.completed {
@@ -939,11 +942,12 @@
         }
 
         .progress-entry {
-            background: #f8f9fa;
+            background: var(--bg-section);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 15px;
             border-left: 4px solid #667eea;
+            color: var(--text-primary);
         }
 
         .progress-entry h4 {
@@ -953,7 +957,7 @@
 
         .progress-entry p {
             margin: 5px 0;
-            color: #333;
+            color: var(--text-primary);
         }
 
         .progress-entry strong {
@@ -961,7 +965,7 @@
         }
 
         .progress-btn {
-            background: white;
+            background: var(--bg-card);
             color: #667eea;
             border: 2px solid #667eea;
             padding: 12px 30px;
@@ -984,7 +988,7 @@
             display: flex;
             gap: 10px;
             margin-bottom: 30px;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
         }
 
@@ -996,7 +1000,7 @@
             cursor: pointer;
             font-size: 1em;
             transition: all 0.3s ease;
-            color: #666;
+            color: var(--text-secondary);
         }
 
         .progress-tab.active {
@@ -1006,7 +1010,7 @@
         }
 
         .progress-tab:hover:not(.active) {
-            background: #f8f9fa;
+            background: var(--bg-section);
             color: #667eea;
         }
 
@@ -1105,8 +1109,8 @@
         /* Bouton toggle dark mode */
         .theme-toggle {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            top: 20px;
+            left: 20px;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -1164,6 +1168,114 @@
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
             border: 1px solid #333;
         }
+
+        /* Amélioration de la lisibilité en thème sombre */
+        body.dark-mode .auth-subtitle {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .auth-message {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .auth-message.error {
+            color: #ff6b6b;
+        }
+
+        body.dark-mode .auth-message.success {
+            color: #51cf66;
+        }
+
+        body.dark-mode .auth-message.warning {
+            color: #ffd43b;
+        }
+
+        body.dark-mode .journal-entry textarea::placeholder {
+            color: #888;
+        }
+
+        body.dark-mode .stat-label {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .entry-date {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .subtitle {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .progress-day-box .day-number {
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .progress-day-box .day-label {
+            color: var(--text-secondary);
+        }
+
+        body.dark-mode .progress-entry h4 {
+            color: #667eea;
+        }
+
+        body.dark-mode .progress-entry strong {
+            color: #764ba2;
+        }
+
+        body.dark-mode .progress-entry p {
+            color: var(--text-primary);
+        }
+
+        /* Styles pour la modal de célébration en thème sombre */
+        body.dark-mode .celebration-content {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .celebration-title {
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .promo-code {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* Styles pour la modal de review en thème sombre */
+        body.dark-mode .review-content {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .review-title {
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .review-subtitle {
+            color: var(--text-secondary);
+        }
+
+        body.dark-mode .review-textarea {
+            background: var(--bg-section);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        body.dark-mode .review-textarea::placeholder {
+            color: var(--text-secondary);
+        }
+
+        body.dark-mode .star {
+            color: #ccc;
+        }
+
+        body.dark-mode .star.active {
+            color: #FFD700;
+        }
+
+        body.dark-mode .star:hover {
+            color: #FFD700;
+        }
    </style>
     
     <!-- Firebase SDK -->
@@ -1195,7 +1307,7 @@
         
         <div class="auth-message" id="authMessage"></div>
         
-        <p style="margin-top: 30px; color: #999; font-size: 0.9em;">
+        <p style="margin-top: 30px; color: var(--text-secondary); font-size: 0.9em;">
             📧 Vérifiez vos spams si l'email n'arrive pas<br>
             🔒 Connexion sécurisée et privée
         </p>
@@ -1270,17 +1382,17 @@
         <div class="celebration-modal" id="celebrationModal">
             <div class="celebration-content">
                 <h2 class="celebration-title">🎉 Félicitations !</h2>
-                <p style="font-size: 1.2em; color: #666; margin-bottom: 20px;">
+                <p style="font-size: 1.2em; color: var(--text-secondary); margin-bottom: 20px;">
                     Vous avez complété les 30 jours de transformation !
                 </p>
                 <p style="font-size: 1.1em; margin-bottom: 30px;">
                     Votre dévouement et votre persévérance ont porté leurs fruits.
                 </p>
                 
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
-                    <p style="color: #666; margin-bottom: 10px;">Votre récompense exclusive :</p>
+                <div style="background: var(--bg-section); padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+                    <p style="color: var(--text-secondary); margin-bottom: 10px;">Votre récompense exclusive :</p>
                     <div class="promo-code">TRANSFORM30</div>
-                <p style="color: #666; margin-top: 10px;">
+                <p style="color: var(--text-secondary); margin-top: 10px;">
     30% de réduction sur <a href="https://sonnycourt.com/formations" target="_blank" style="color: #667eea; text-decoration: underline;">toutes les formations</a><br>
     <small>Valable 7 jours</small>
 </p>
@@ -1293,7 +1405,7 @@
                     🔄 Commencer un nouveau cycle
                 </button>
                 
-                <button onclick="closeCelebration()" style="display: block; margin: 20px auto 0; background: none; border: none; color: #666; cursor: pointer; text-decoration: underline;">
+                <button onclick="closeCelebration()" style="display: block; margin: 20px auto 0; background: none; border: none; color: var(--text-secondary); cursor: pointer; text-decoration: underline;">
                     Fermer
                 </button>
             </div>
