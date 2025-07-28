@@ -509,6 +509,14 @@
             margin-bottom: 20px;
         }
 
+        .chart-container {
+            background: var(--bg-section);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
         #incarnationChart {
             max-height: 300px;
         }
@@ -1312,6 +1320,16 @@
         body.dark-mode .logout-btn:hover {
             color: #764ba2;
         }
+
+        /* Styles pour le graphique en thème sombre */
+        body.dark-mode .chart-container {
+            background: var(--bg-section);
+            border: 1px solid var(--border-color);
+        }
+
+        body.dark-mode .chart-title {
+            color: #667eea;
+        }
    </style>
     
     <!-- Firebase SDK -->
@@ -2092,6 +2110,8 @@ if (dayNumber === 1 && !journalData.startDate) {
 
     function initializeChart() {
         const ctx = document.getElementById('incarnationChart').getContext('2d');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        
         incarnationChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -2105,7 +2125,7 @@ if (dayNumber === 1 && !journalData.startDate) {
                     tension: 0.4,
                     pointRadius: 5,
                     pointBackgroundColor: '#667eea',
-                    pointBorderColor: '#fff',
+                    pointBorderColor: isDarkMode ? '#242424' : '#fff',
                     pointBorderWidth: 2
                 }]
             },
@@ -2118,11 +2138,23 @@ if (dayNumber === 1 && !journalData.startDate) {
                     }
                 },
                 scales: {
+                    x: {
+                        ticks: {
+                            color: isDarkMode ? '#e0e0e0' : '#666'
+                        },
+                        grid: {
+                            color: isDarkMode ? '#333' : '#e0e0e0'
+                        }
+                    },
                     y: {
                         beginAtZero: true,
                         max: 10,
                         ticks: {
-                            stepSize: 1
+                            stepSize: 1,
+                            color: isDarkMode ? '#e0e0e0' : '#666'
+                        },
+                        grid: {
+                            color: isDarkMode ? '#333' : '#e0e0e0'
                         }
                     }
                 }
@@ -2141,6 +2173,23 @@ if (dayNumber === 1 && !journalData.startDate) {
         }
         
         incarnationChart.data.datasets[0].data = data;
+        incarnationChart.update();
+    }
+
+    function updateChartTheme() {
+        if (!incarnationChart) return;
+        
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        
+        // Mettre à jour les couleurs du graphique
+        incarnationChart.options.scales.x.ticks.color = isDarkMode ? '#e0e0e0' : '#666';
+        incarnationChart.options.scales.x.grid.color = isDarkMode ? '#333' : '#e0e0e0';
+        incarnationChart.options.scales.y.ticks.color = isDarkMode ? '#e0e0e0' : '#666';
+        incarnationChart.options.scales.y.grid.color = isDarkMode ? '#333' : '#e0e0e0';
+        
+        // Mettre à jour la couleur de la bordure des points
+        incarnationChart.data.datasets[0].pointBorderColor = isDarkMode ? '#242424' : '#fff';
+        
         incarnationChart.update();
     }
 
@@ -2840,6 +2889,11 @@ function toggleTheme() {
         body.classList.add('dark-mode');
         themeIcon.textContent = '☀️';
         localStorage.setItem('theme', 'dark');
+    }
+    
+    // Mettre à jour le graphique si il existe
+    if (incarnationChart) {
+        updateChartTheme();
     }
 }
 
