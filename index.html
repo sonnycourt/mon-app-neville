@@ -2268,21 +2268,22 @@ function createConfetti() {
         document.getElementById('celebrationModal').style.display = 'none';
     }
 
-    // Générer le certificat design
+    // Générer le certificat design amélioré
     function generateCertificate() {
         const canvas = document.createElement('canvas');
         canvas.width = 1200;
         canvas.height = 800;
         const ctx = canvas.getContext('2d');
         
-        // Créer un dégradé de fond
-        const gradient = ctx.createLinearGradient(0, 0, 0, 800);
+        // Créer un dégradé radial de fond
+        const gradient = ctx.createRadialGradient(600, 400, 0, 600, 400, 600);
         gradient.addColorStop(0, '#f8f9ff');
-        gradient.addColorStop(1, '#e8ecff');
+        gradient.addColorStop(0.7, '#e8ecff');
+        gradient.addColorStop(1, '#d8e0ff');
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, 1200, 800);
         
-        // Bordure décorative
+        // Bordure décorative avec coins arrondis (simulation)
         ctx.strokeStyle = '#667eea';
         ctx.lineWidth = 8;
         ctx.strokeRect(30, 30, 1140, 740);
@@ -2297,7 +2298,7 @@ function createConfetti() {
         ctx.font = 'bold 72px Arial';
         ctx.textAlign = 'center';
         ctx.fillText('🎉', 400, 120);
-        ctx.fillText('🎉', 800, 120);
+        ctx.fillText('🏆', 800, 120);
         
         // Titre principal avec ombre
         ctx.shadowColor = 'rgba(102, 126, 234, 0.3)';
@@ -2327,10 +2328,16 @@ function createConfetti() {
         ctx.lineTo(1000, 280);
         ctx.stroke();
         
-        // Icône de transformation
+        // Badge de réussite
         ctx.font = 'bold 48px Arial';
         ctx.fillStyle = '#667eea';
-        ctx.fillText('✨', 600, 350);
+        ctx.fillText('⭐', 600, 350);
+        
+        // Calculer les statistiques
+        const entries = Object.values(journalData.entries || {});
+        const completedEntries = entries.filter(e => e.completed);
+        const avgIncarnation = completedEntries.length > 0 ? 
+            (completedEntries.reduce((sum, e) => sum + (e.incarnation || 0), 0) / completedEntries.length).toFixed(1) : 0;
         
         // Texte "Décerné à"
         ctx.fillStyle = '#333';
@@ -2342,22 +2349,28 @@ function createConfetti() {
         ctx.font = 'bold 48px Arial';
         ctx.fillText(currentUser.email, 600, 480);
         
+        // Statistiques personnalisées
+        ctx.fillStyle = '#667eea';
+        ctx.font = 'bold 24px Arial';
+        ctx.fillText(`${completedEntries.length}/30 jours complétés`, 600, 530);
+        ctx.fillText(`Moyenne d'incarnation: ${avgIncarnation}/10`, 600, 560);
+        
         // Date avec style
         ctx.fillStyle = '#666';
-        ctx.font = '24px Arial';
+        ctx.font = '20px Arial';
         const date = new Date().toLocaleDateString('fr-FR', { 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric' 
         });
-        ctx.fillText('Le ' + date, 600, 530);
+        ctx.fillText('Le ' + date, 600, 590);
         
-        // Message de félicitations
-        ctx.font = '20px Arial';
+        // Message de félicitations personnalisé
+        ctx.font = '18px Arial';
         ctx.fillStyle = '#333';
-        ctx.fillText('Pour avoir complété avec succès le programme', 600, 580);
-        ctx.fillText('de transformation personnelle de 30 jours', 600, 610);
-        ctx.fillText('et démontré une persévérance exceptionnelle', 600, 640);
+        ctx.fillText('Pour avoir complété avec succès le programme', 600, 630);
+        ctx.fillText('de transformation personnelle de 30 jours', 600, 655);
+        ctx.fillText(`avec une persévérance exceptionnelle (${avgIncarnation}/10)`, 600, 680);
         
         // Signature avec style
         ctx.font = 'bold 32px Arial';
