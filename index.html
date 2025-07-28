@@ -2701,12 +2701,7 @@ function closeProgressSummary() {
     document.getElementById('progressSummaryModal').classList.remove('active');
 }
 
-// Fermer en cliquant à l'extérieur
-document.getElementById('progressSummaryModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeProgressSummary();
-    }
-});
+// Fermeture gérée par le gestionnaire global
 
 // Fonction pour changer d'onglet
 function switchTab(tabName) {
@@ -2942,6 +2937,61 @@ function toggleTheme() {
 }
 
 // Le thème sera initialisé après la connexion de l'utilisateur
+
+// Gestionnaires d'événements pour les modals
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestionnaire pour la touche ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAllModals();
+        }
+    });
+
+    // Gestionnaire pour clic à l'extérieur des modals
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('celebration-modal') || 
+            e.target.classList.contains('review-modal') ||
+            e.target.classList.contains('progress-modal')) {
+            closeModal(e.target);
+        }
+    });
+});
+
+// Fonction pour fermer tous les modals
+function closeAllModals() {
+    const modals = document.querySelectorAll('.celebration-modal, .review-modal, .progress-modal');
+    modals.forEach(modal => {
+        if (modal.classList.contains('active') || modal.style.display === 'flex') {
+            closeModal(modal);
+        }
+    });
+}
+
+// Fonction pour fermer un modal spécifique
+function closeModal(modal) {
+    if (modal.classList.contains('celebration-modal')) {
+        closeCelebration();
+    } else if (modal.classList.contains('review-modal')) {
+        closeReview();
+    } else if (modal.classList.contains('progress-modal')) {
+        closeProgressSummary();
+    }
+}
+
+// Fonction pour ouvrir un modal avec gestion du focus
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+        
+        // Focus sur le premier élément interactif
+        const firstFocusable = modal.querySelector('button, input, textarea, [tabindex]:not([tabindex="-1"])');
+        if (firstFocusable) {
+            firstFocusable.focus();
+        }
+    }
+}
     
     </script>
 
