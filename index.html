@@ -1216,15 +1216,15 @@ const actionCodeSettings = {
     
     let currentUser = null;
 function getCurrentProgramDay() {
-    const startDate = new Date(localStorage.getItem('journalStartDate') || new Date());
+    // Prioriser la date de Firebase, sinon localStorage
+    const startDate = new Date(journalData.startDate || localStorage.getItem('journalStartDate') || new Date());
     const today = new Date();
     
-    // Réinitialiser à minuit pour les deux dates
     startDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
     
     const dayNumber = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
-    return Math.min(dayNumber, 30); // Max 30 jours
+    return Math.min(dayNumber, 30);
 }
     let journalData = {
         entries: {},
@@ -1427,6 +1427,10 @@ function getCurrentProgramDay() {
                 const data = snapshot.val();
                 if (data) {
                     journalData = data;
+                    // Synchroniser la date de début si elle existe dans Firebase
+                    if (journalData.startDate) {
+                        localStorage.setItem('journalStartDate', journalData.startDate);
+                    }
                     updateUIWithData();
                 }
             })
@@ -1599,9 +1603,11 @@ function getCurrentProgramDay() {
         saveToFirebase(journalData);
 
 // Définir la date de début lors du premier enregistrement
-if (dayNumber === 1 && !localStorage.getItem('journalStartDate')) {
+if (dayNumber === 1 && !journalData.startDate) {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Minuit pour cohérence
+    journalData.startDate = today.toISOString();
+    // Sauvegarder aussi en local pour backup
     localStorage.setItem('journalStartDate', today.toISOString());
 }
         
