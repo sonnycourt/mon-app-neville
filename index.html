@@ -2140,7 +2140,7 @@ function showProgressSummary() {
     const completedEntries = Object.entries(journalData.entries)
         .filter(([_, entry]) => entry.completed)
         .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
-        .slice(0, 3);
+        
     
     if (completedEntries.length > 0) {
         html += `
