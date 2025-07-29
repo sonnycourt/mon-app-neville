@@ -155,6 +155,75 @@
             display: block;
         }
 
+        /* Boîte IA */
+        .ai-box {
+            background: var(--bg-card);
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            display: none;
+        }
+
+        .ai-box.show {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .ai-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .ai-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 0;
+        }
+
+        .ai-message {
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+
+        .ai-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .ai-close:hover {
+            background: var(--bg-section);
+            color: var(--text-primary);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
         /* Container principal */
         .container {
             max-width: 1200px;
@@ -1964,6 +2033,18 @@ function getCurrentProgramDay() {
                 ${entry.completed ? '✓ Mettre à jour' : '💾 Sauvegarder'}
             </button>
             
+            <!-- Boîte IA -->
+            <div class="ai-box" id="aiBox-${dayNumber}" style="display: none;">
+                <button class="ai-close" onclick="closeAiBox(${dayNumber})">×</button>
+                <div class="ai-header">
+                    <div class="ai-icon">🤖</div>
+                    <h3 class="ai-title">Réflexion IA</h3>
+                </div>
+                <div class="ai-message" id="aiMessage-${dayNumber}">
+                    <!-- Le message IA sera généré ici -->
+                </div>
+            </div>
+            
             <!-- Bouton de célébration (visible seulement si terminé) -->
             <button class="celebration-btn" onclick="showCelebration()" style="margin-top: 15px; display: none;" id="celebrationBtnEntry">
                 🎉 Voir ma célébration
@@ -2049,6 +2130,11 @@ if (dayNumber === 1 && !journalData.startDate) {
         setTimeout(() => {
             btn.textContent = '✓ Mettre à jour';
         }, 2000);
+        
+        // Afficher la boîte IA après l'enregistrement
+        setTimeout(() => {
+            showAiBox(dayNumber, intention, gratitude, reflection);
+        }, 500);
     }
 
     function updateStats() {
@@ -3029,6 +3115,108 @@ function openModal(modalId) {
             firstFocusable.focus();
         }
     }
+}
+
+// Fonctions pour la boîte IA
+function showAiBox(dayNumber, intention, gratitude, reflection) {
+    const aiBox = document.getElementById(`aiBox-${dayNumber}`);
+    const aiMessage = document.getElementById(`aiMessage-${dayNumber}`);
+    
+    if (aiBox && aiMessage) {
+        // Générer le message IA
+        const message = generateAiMessage(intention, gratitude, reflection, dayNumber);
+        aiMessage.innerHTML = message;
+        
+        // Afficher la boîte avec animation
+        aiBox.style.display = 'block';
+        setTimeout(() => {
+            aiBox.classList.add('show');
+        }, 100);
+    }
+}
+
+function closeAiBox(dayNumber) {
+    const aiBox = document.getElementById(`aiBox-${dayNumber}`);
+    if (aiBox) {
+        aiBox.classList.remove('show');
+        setTimeout(() => {
+            aiBox.style.display = 'none';
+        }, 500);
+    }
+}
+
+function generateAiMessage(intention, gratitude, reflection, dayNumber) {
+    // Analyser le contenu pour déterminer le sentiment et les thèmes
+    const content = `${intention} ${gratitude} ${reflection}`.toLowerCase();
+    
+    // Détecter les thèmes principaux
+    const themes = {
+        positive: ['gratitude', 'reconnaissant', 'merci', 'heureux', 'joie', 'amour', 'paix', 'sérénité', 'bienveillance', 'bien', 'positif'],
+        challenges: ['difficile', 'défi', 'challenge', 'obstacle', 'problème', 'stress', 'anxiété', 'peur', 'doute', 'négatif'],
+        growth: ['apprentissage', 'évolution', 'transformation', 'changement', 'progrès', 'développement', 'prise de conscience', 'révélation'],
+        goals: ['objectif', 'but', 'intention', 'souhait', 'désir', 'aspiration', 'rêve', 'vision', 'mission']
+    };
+    
+    let detectedThemes = [];
+    Object.entries(themes).forEach(([theme, keywords]) => {
+        if (keywords.some(keyword => content.includes(keyword))) {
+            detectedThemes.push(theme);
+        }
+    });
+    
+    // Messages inspirants basés sur les thèmes détectés
+    const messages = {
+        positive: [
+            "🌟 Ta gratitude rayonne dans tes mots ! Continue à cultiver cette énergie positive qui t'entoure.",
+            "💫 Ton état d'esprit reconnaissant est un véritable superpouvoir. Il attire les bonnes choses vers toi.",
+            "✨ La gratitude que tu exprimes est contagieuse. Elle inspire et élève ceux qui t'entourent."
+        ],
+        challenges: [
+            "💪 Face aux défis, tu montres une force intérieure remarquable. Chaque obstacle est une opportunité de croissance.",
+            "🛡️ Tes difficultés révèlent ta résilience. Continue à avancer, un pas à la fois.",
+            "🌱 Les défis sont des catalyseurs de transformation. Tu es en train de devenir plus fort(e) à travers eux."
+        ],
+        growth: [
+            "🚀 Tes prises de conscience montrent une évolution profonde. Tu es en train de te transformer de l'intérieur.",
+            "🎯 Chaque jour, tu te rapproches de la version la plus authentique de toi-même. Continue sur ce chemin.",
+            "🔮 Tes réflexions révèlent une sagesse grandissante. Tu développes une vision claire de ton potentiel."
+        ],
+        goals: [
+            "🎯 Ton intention est claire et puissante. Elle guide tes actions vers ta transformation.",
+            "⭐ Tes objectifs reflètent une vision élevée de toi-même. Continue à viser haut !",
+            "🌟 Tes aspirations sont le moteur de ton évolution. Garde-les toujours en vue."
+        ]
+    };
+    
+    // Sélectionner un message approprié
+    let selectedMessage = "";
+    if (detectedThemes.length > 0) {
+        const primaryTheme = detectedThemes[0];
+        const themeMessages = messages[primaryTheme];
+        selectedMessage = themeMessages[Math.floor(Math.random() * themeMessages.length)];
+    } else {
+        // Message par défaut si aucun thème spécifique n'est détecté
+        const defaultMessages = [
+            "✨ Chaque jour, tu construis ton chemin vers la transformation. Continue à être fidèle à toi-même.",
+            "🌟 Tes réflexions montrent une conscience grandissante. Tu évolues jour après jour.",
+            "💫 Chaque entrée dans ton journal est un pas vers ta meilleure version. Continue sur ce chemin."
+        ];
+        selectedMessage = defaultMessages[Math.floor(Math.random() * defaultMessages.length)];
+    }
+    
+    // Ajouter un message spécifique au jour si c'est un jour particulier
+    let dayMessage = "";
+    if (dayNumber === 1) {
+        dayMessage = "<br><br>🎉 <strong>Félicitations pour ce premier jour !</strong> Tu as fait le plus important : commencer.";
+    } else if (dayNumber === 7) {
+        dayMessage = "<br><br>🏆 <strong>Une semaine déjà !</strong> Tu construis des habitudes solides.";
+    } else if (dayNumber === 15) {
+        dayMessage = "<br><br>🌟 <strong>Mi-parcours !</strong> Tu as déjà parcouru la moitié du chemin.";
+    } else if (dayNumber === 30) {
+        dayMessage = "<br><br>🎊 <strong>Jour 30 !</strong> Tu as accompli quelque chose d'extraordinaire !";
+    }
+    
+    return selectedMessage + dayMessage;
 }
     
     </script>
